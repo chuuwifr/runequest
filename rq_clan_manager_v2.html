@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion de Domaine — RuneQuest Glorantha</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=MedievalSharp&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bronze:#8B5A2B;--bronze-light:#CD853F;--bronze-dark:#5C3D1E;
+  --crimson:#8B0000;--obsidian:#0D0D0D;--parch-old:#D4A574;
+  --gold:#FFD700;--gold-dim:#B8860B;--old-gold:#c9922a;
+  --old-gold-light:#e8b84b;--old-gold-dark:#8b6014;
+  --ink:#1a1410;--parch:#2a2015;--parch-d:#3a2a1a;--parch-deep:#4a3a2a;
+  --red:#8b2020;--green:#1e5c2e;--blue:#1a3d6e;--shadow:rgba(0,0,0,0.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background-color:#0a0806;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect fill='%230d0a08' width='80' height='80'/%3E%3Cpath d='M0 0h80v1H0zM0 20h80v1H0zM0 40h80v1H0zM0 60h80v1H0zM0 79h80v1H0z' fill='%23151010' opacity='0.5'/%3E%3Ccircle cx='10' cy='10' r='1' fill='%23201a15'/%3E%3Ccircle cx='30' cy='25' r='1' fill='%23201a15'/%3E%3Ccircle cx='50' cy='55' r='1' fill='%23201a15'/%3E%3Ccircle cx='70' cy='15' r='1' fill='%23201a15'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(60deg,transparent,transparent 40px,rgba(139,90,43,0.04) 40px,rgba(139,90,43,0.04) 80px);
+  font-family:'Crimson Pro',Georgia,serif;color:#c4b59a;min-height:100vh;position:relative;
+}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.5) 100%);pointer-events:none;z-index:0;}
+.header{background:linear-gradient(180deg,#1a0808 0%,#2d1212 50%,#1a0808 100%);border-bottom:4px solid;border-image:linear-gradient(90deg,transparent,var(--bronze),var(--gold),var(--bronze),transparent) 1;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,0.8),inset 0 -1px 0 rgba(205,133,63,0.3),0 0 40px rgba(139,0,0,0.15);gap:14px;flex-wrap:wrap;}
+.header::before,.header::after{content:'⚔';position:absolute;top:50%;transform:translateY(-50%);font-size:2.5rem;opacity:0.12;filter:grayscale(1);}
+.header::before{left:8px;}.header::after{right:8px;transform:translateY(-50%) scaleX(-1);}
+.header-title{font-family:'MedievalSharp',cursive;color:#FFD700;font-size:1.5rem;letter-spacing:3px;text-shadow:0 0 15px rgba(255,215,0,0.4),0 0 30px rgba(255,215,0,0.2),2px 2px 0 #000;position:relative;padding-left:28px;}
+.header-title::before{content:'◆';position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--bronze-light);font-size:0.7rem;}
+.header-sub{color:#8B7355;font-style:italic;font-size:.88rem;margin-top:3px;text-shadow:1px 1px 2px #000;}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:10px 20px;border:2px solid var(--bronze);background:linear-gradient(180deg,#2a1515 0%,#1a0a0a 100%);color:#CD853F;font-family:'MedievalSharp',cursive;font-size:.72rem;cursor:pointer;letter-spacing:1px;transition:all .3s;border-radius:3px;position:relative;overflow:hidden;text-shadow:1px 1px 2px #000;box-shadow:inset 0 1px 0 rgba(205,133,63,0.2),0 2px 4px rgba(0,0,0,0.5);}
+.btn:hover{background:linear-gradient(180deg,#3a2020 0%,#2a1515 100%);color:#FFD700;border-color:#CD853F;box-shadow:0 0 15px rgba(255,215,0,0.25),inset 0 1px 0 rgba(255,215,0,0.2);transform:translateY(-1px);}
+.btn-primary{background:linear-gradient(180deg,var(--bronze-light) 0%,var(--bronze-dark) 100%);color:#1a0a0a;border-color:var(--bronze);font-weight:bold;text-shadow:none;}
+.btn-primary:hover{background:linear-gradient(180deg,#daa520 0%,var(--bronze-light) 100%);color:#000;box-shadow:0 0 20px rgba(255,215,0,0.4),inset 0 1px 0 rgba(255,255,255,0.3);}
+.btn-danger{border-color:#5a2020;color:#8B0000;}
+.btn-danger:hover{background:linear-gradient(180deg,#5a2020 0%,#3a1515 100%);color:#CD5C5C;border-color:#8B0000;box-shadow:0 0 15px rgba(139,0,0,0.4);}
+.btn-sm{padding:4px 10px;border:1px solid var(--bronze-dark);border-radius:2px;font-size:.7rem;cursor:pointer;background:transparent;transition:all .15s;color:#CD853F;}
+.btn-sm-e{border-color:var(--bronze-dark);color:var(--bronze-light)}.btn-sm-e:hover{background:var(--bronze-dark);color:#FFD700}
+.btn-sm-d{border-color:#5a2020;color:#8B0000}.btn-sm-d:hover{background:#8B0000;color:#fff}
+.btn-dice{padding:6px 14px;border:2px solid #4a3a8a;background:linear-gradient(180deg,#1a1040 0%,#0d0820 100%);color:#9a7aff;font-family:'MedievalSharp',cursive;font-size:.72rem;cursor:pointer;border-radius:3px;transition:all .3s;text-shadow:0 0 8px rgba(154,122,255,0.5);}
+.btn-dice:hover{background:linear-gradient(180deg,#2a2060 0%,#1a1040 100%);color:#c0a0ff;border-color:#7a5aff;box-shadow:0 0 12px rgba(154,122,255,0.4);}
+.nav-tabs{background:linear-gradient(180deg,#0d0d0d 0%,#1a1510 50%,#0d0d0d 100%);display:flex;gap:0;border-bottom:3px solid var(--bronze-dark);overflow-x:auto;padding:0 15px;position:relative;box-shadow:inset 0 -5px 20px rgba(0,0,0,0.5);}
+.nav-tab{padding:14px 16px;color:#8B7355;cursor:pointer;font-family:'MedievalSharp',cursive;font-size:.68rem;letter-spacing:1px;border-bottom:3px solid transparent;transition:all .25s;white-space:nowrap;margin-bottom:-3px;position:relative;}
+.nav-tab:hover{color:#CD853F;text-shadow:0 0 10px rgba(205,133,63,0.5);}
+.nav-tab.active{color:#FFD700;border-bottom-color:#FFD700;background:linear-gradient(180deg,transparent 0%,rgba(255,215,0,0.05) 100%);text-shadow:0 0 15px rgba(255,215,0,0.4);}
+.content{max-width:1600px;margin:0 auto;padding:25px 18px;position:relative;z-index:1;}
+.section{display:none}.section.active{display:block}
+.card{background:linear-gradient(135deg,rgba(20,15,10,0.95) 0%,rgba(30,20,15,0.95) 100%);border:2px solid var(--bronze-dark);border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,0.7),inset 0 1px 0 rgba(205,133,63,0.1),0 0 0 1px #000;margin-bottom:22px;overflow:hidden;position:relative;}
+.card::before,.card::after{content:'❧';position:absolute;color:var(--bronze-dark);font-size:1.1rem;opacity:0.5;}
+.card::before{top:4px;left:7px;}.card::after{top:4px;right:7px;transform:scaleX(-1);}
+.card-header{background:linear-gradient(180deg,#1a0a0a 0%,#2d1515 100%);padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--bronze-dark);box-shadow:0 2px 10px rgba(0,0,0,0.5);}
+.card-title{font-family:'MedievalSharp',cursive;color:#FFD700;font-size:.82rem;letter-spacing:2px;text-shadow:0 0 10px rgba(255,215,0,0.3);}
+.card-body{padding:18px;}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.fg{display:flex;flex-direction:column;gap:6px;}
+.fl{font-size:.7rem;font-weight:600;color:#8B7355;text-transform:uppercase;letter-spacing:1.5px;font-family:'MedievalSharp',cursive;}
+.fi{padding:10px 14px;background:linear-gradient(180deg,#1a0a0a 0%,#0d0d0d 100%);border:1px solid #3a2a1a;border-radius:3px;font-family:'Crimson Pro',serif;font-size:.95rem;color:#e8d9b8;transition:all .2s;box-shadow:inset 0 2px 4px rgba(0,0,0,0.5);}
+.fi:focus{outline:none;border-color:#CD853F;box-shadow:inset 0 2px 4px rgba(0,0,0,0.5),0 0 10px rgba(205,133,63,0.3);}
+.fi::placeholder{color:#5a4a3a;}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+thead tr{background:linear-gradient(180deg,#1a0a0a 0%,#2d1515 100%);border-bottom:2px solid var(--bronze-dark);}
+th{padding:11px 13px;text-align:left;color:#CD853F;font-family:'MedievalSharp',cursive;font-size:.62rem;letter-spacing:1.5px;font-weight:400;white-space:nowrap;text-transform:uppercase;text-shadow:0 0 10px rgba(205,133,63,0.3);}
+td{padding:9px 13px;border-bottom:1px solid #2a2015;vertical-align:middle;color:#c4b59a;}
+tr:nth-child(even) td{background:rgba(0,0,0,0.15);}
+tr:hover td{background:rgba(205,133,63,0.08);color:#e8d9b8;}
+tfoot td{background:linear-gradient(180deg,#1a0a0a 0%,#0d0505 100%)!important;color:#FFD700;font-family:'MedievalSharp',cursive;font-size:.68rem;padding:11px 13px;border-top:2px solid var(--bronze-dark);text-shadow:0 0 10px rgba(255,215,0,0.3);}
+.sb{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.7rem;font-weight:600;border:1px solid;}
+.sd{background:#1a1a1a;color:#888;border-color:#333}.sp{background:#3a2a1a;color:#CD853F;border-color:#5a4a3a}
+.sl{background:#1a2a1a;color:#6abf7b;border-color:#2a4a3a}.sn{background:#1a1a3a;color:#7ab0f0;border-color:#2a2a5a}
+.sr{background:#3a1a1a;color:#f0a070;border-color:#5a2a2a}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65rem;border:1px solid;}
+.tc{background:rgba(30,60,110,0.3);color:#7ab0f0;border-color:#1a3d6e}.td{background:rgba(139,32,32,0.3);color:#cc4444;border-color:#8b2020}
+.tr_{background:rgba(107,35,142,0.3);color:#c070c0;border-color:#6b238e}.tk{background:rgba(30,92,46,0.3);color:#6abf7b;border-color:#1e5c2e}
+.tam{background:rgba(90,70,20,0.3);color:#e0c060;border-color:#806030}
+.cp{color:#6abf7b;font-weight:600}.cn{color:#cd5c5c;font-weight:600}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.modal-overlay.open{display:flex}
+.modal{background:linear-gradient(180deg,#2a1a15 0%,#1a0f0a 100%);border:3px solid var(--bronze);border-radius:6px;padding:24px;width:94%;max-width:600px;box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 40px rgba(139,0,0,0.3),inset 0 1px 0 rgba(205,133,63,0.2);max-height:92vh;overflow-y:auto;position:relative;}
+.modal::before{content:'✦';position:absolute;top:-14px;left:50%;transform:translateX(-50%);color:#FFD700;font-size:1.4rem;text-shadow:0 0 20px rgba(255,215,0,0.5);}
+.mt{font-family:'MedievalSharp',cursive;color:#FFD700;font-size:.95rem;margin-bottom:18px;padding-bottom:11px;border-bottom:2px solid var(--bronze-dark);text-align:center;text-shadow:0 0 15px rgba(255,215,0,0.3);}
+.mf{display:flex;gap:12px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:2px solid var(--bronze-dark);}
+.fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px;}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px;}
+.sbadge{background:linear-gradient(180deg,#1a0a0a 0%,#2d1515 100%);border:2px solid var(--bronze-dark);border-radius:4px;padding:15px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.5),inset 0 1px 0 rgba(205,133,63,0.1);}
+.sv{font-family:'MedievalSharp',cursive;font-size:1.35rem;color:#FFD700;text-shadow:0 0 15px rgba(255,215,0,0.4);}
+.sll{color:#8B7355;font-size:.74rem;margin-top:4px;font-style:italic;font-family:'Crimson Pro',serif;}
+.sv.pos{color:#6abf7b;text-shadow:0 0 15px rgba(106,191,123,0.4)}.sv.neg{color:#cd5c5c;text-shadow:0 0 15px rgba(205,92,92,0.4)}
+.intro{color:#c4b59a;font-style:italic;font-size:.9rem;margin-bottom:15px;padding:12px 16px;background:rgba(205,133,63,0.08);border-left:4px solid var(--bronze);border-radius:0 4px 4px 0;line-height:1.6;}
+.rbox{background:rgba(139,0,0,0.1);border:1px solid #3a2020;border-radius:4px;padding:14px 18px;margin-bottom:15px;font-size:.85rem;line-height:1.7;color:#b8a080;}
+.rbox strong{color:#CD853F;}
+.rbox-magic{background:rgba(107,35,142,0.1);border:1px solid #4a2060;border-radius:4px;padding:14px 18px;margin-bottom:15px;font-size:.85rem;line-height:1.7;color:#c0a0d8;}
+.rbox-magic strong{color:#c070c0;}
+.rdiv{text-align:center;color:#5a4a3a;font-size:1.1rem;margin:12px 0;letter-spacing:12px;text-shadow:0 0 10px rgba(139,90,43,0.3);}
+.toast{position:fixed;bottom:28px;right:28px;background:linear-gradient(180deg,#1a2a1a 0%,#0d1a0d 100%);border:2px solid #2a5a2a;color:#6abf7b;padding:13px 22px;border-radius:4px;font-family:'MedievalSharp',cursive;font-size:.72rem;letter-spacing:1px;z-index:9999;transform:translateY(100px);opacity:0;transition:all .4s;pointer-events:none;box-shadow:0 0 30px rgba(106,191,123,0.3);}
+.toast.show{transform:translateY(0);opacity:1;}
+/* Dice roll display */
+.dice-panel{background:rgba(30,15,50,0.6);border:2px solid #4a3080;border-radius:6px;padding:16px;margin:12px 0;}
+.dice-result{font-family:'MedievalSharp',cursive;font-size:2rem;color:#9a7aff;text-shadow:0 0 20px rgba(154,122,255,0.6);text-align:center;padding:10px;transition:all .3s;}
+.dice-label{color:#7a5aaa;font-size:.72rem;text-align:center;margin-top:4px;}
+.test-panel{background:rgba(20,30,15,0.6);border:2px solid #2a4a2a;border-radius:6px;padding:16px;margin:10px 0;}
+.test-result{font-family:'MedievalSharp',cursive;font-size:1.4rem;color:#6abf7b;text-shadow:0 0 15px rgba(106,191,123,0.5);text-align:center;padding:8px;}
+.event-result{background:rgba(60,30,10,0.8);border:2px solid #6a4010;border-radius:6px;padding:16px;margin:10px 0;font-size:.9rem;line-height:1.7;}
+.event-bad{border-color:#8b2020;background:rgba(60,10,10,0.8);}
+.event-good{border-color:#2a6a2a;background:rgba(10,40,10,0.8);}
+/* Filter buttons */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.fbtn{padding:5px 14px;border:1px solid #4a3a2a;background:transparent;color:#8B7355;font-size:.72rem;cursor:pointer;border-radius:12px;transition:all .2s;font-family:'MedievalSharp',cursive;}
+.fbtn.active{background:var(--bronze-dark);color:#FFD700;border-color:var(--bronze);}
+.fbtn:hover{border-color:var(--bronze-light);color:#CD853F;}
+/* Terrain quality colors */
+.q-morne{color:#666;}.q-clairseme{color:#8B7355;}.q-moyen{color:#CD853F;}.q-abondant{color:#6abf7b;}.q-luxuriant{color:#40e080;}
+@media (max-width:768px){.header{padding:14px;flex-direction:column;text-align:center;}.nav-tab{padding:11px 10px;font-size:.6rem;}}
+
+/* LIGHT THEME */
+body.light{background-color:#f5ead6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect fill='%23ede0c8' width='100' height='100'/%3E%3Cpath d='M0 0h100v1H0zM0 25h100v1H0zM0 50h100v1H0zM0 75h100v1H0z' fill='%23d4c49a' opacity='0.3'/%3E%3C/svg%3E");color:#3a2a1a;}
+body.light::before{display:none}
+body.light .header{background:linear-gradient(180deg,#e8d9b8 0%,#d4c49a 50%,#e8d9b8 100%);border-bottom-color:#8B5A2B;}
+body.light .header-title{color:#5C3D1E;text-shadow:none;}
+body.light .header-sub{color:#6B5344;}
+body.light .btn{background:linear-gradient(180deg,#f5ead6 0%,#e8d9b8 100%);border-color:#8B5A2B;color:#5C3D1E;text-shadow:none;}
+body.light .btn:hover{background:linear-gradient(180deg,#daa520 0%,#CD853F 100%);color:#1a0a0a;}
+body.light .btn-primary{background:linear-gradient(180deg,#CD853F 0%,#8B5A2B 100%);color:#fff;}
+body.light .btn-danger{border-color:#8b2020;color:#8b2020;}
+body.light .btn-dice{background:linear-gradient(180deg,#e8e0f8 0%,#d0c8f0 100%);border-color:#7a5aaa;color:#5a3a8a;}
+body.light .nav-tabs{background:linear-gradient(180deg,#e8d9b8 0%,#d4c49a 100%);border-bottom-color:#8B5A2B;}
+body.light .nav-tab{color:#6B5344;}
+body.light .nav-tab.active{color:#5C3D1E;border-bottom-color:#8B5A2B;background:rgba(139,90,43,0.1);}
+body.light .card{background:linear-gradient(135deg,rgba(255,250,240,0.95) 0%,rgba(245,234,214,0.95) 100%);border-color:#c9b896;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+body.light .card-header{background:linear-gradient(180deg,#d4c49a 0%,#c9b896 100%);border-bottom-color:#a08060;}
+body.light .card-title{color:#5C3D1E;text-shadow:none;}
+body.light .fl{color:#6B5344;}
+body.light .fi{background:linear-gradient(180deg,#fff 0%,#f5ead6 100%);border-color:#c9b896;color:#3a2a1a;}
+body.light th{color:#5C3D1E;}
+body.light td{color:#3a2a1a;border-bottom-color:#d4c49a;}
+body.light tfoot td{background:linear-gradient(180deg,#d4c49a 0%,#c9b896 100%)!important;color:#5C3D1E;border-top-color:#a08060;}
+body.light .modal{background:linear-gradient(180deg,#f5ead6 0%,#e8d9b8 100%);border-color:#CD853F;}
+body.light .mt{color:#5C3D1E;border-bottom-color:#c9b896;}
+body.light .mf{border-top-color:#c9b896;}
+body.light .intro{background:rgba(139,90,43,0.1);border-left-color:#CD853F;color:#3a2a1a;}
+body.light .rbox{background:rgba(139,90,43,0.08);border-color:#c9b896;color:#4a3a2a;}
+body.light .rbox strong{color:#5C3D1E;}
+body.light .sv{color:#5C3D1E;}
+body.light .sv.pos{color:#2e7d32}.body.light .sv.neg{color:#c62828}
+body.light .sbadge{background:linear-gradient(180deg,#e8d9b8 0%,#d4c49a 100%);border-color:#c9b896;}
+body.light .sll{color:#6B5344;}
+body.light .toast{background:linear-gradient(180deg,#e8f5e9 0%,#c8e6c9 100%);border-color:#2e7d32;color:#1b5e20;}
+body.light .dice-panel{background:rgba(230,220,255,0.4);border-color:#9a80cc;}
+body.light .dice-result{color:#5a3a9a;}
+body.light .test-panel{background:rgba(220,240,220,0.4);border-color:#4a8a4a;}
+body.light .test-result{color:#2e7d32;}
+body.light .fbtn{border-color:#c9b896;color:#6B5344;}
+body.light .fbtn.active{background:#c9b896;color:#3a2a1a;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><div class="header-title">⚔ Gestion de Domaine ⚔</div><div class="header-sub">RuneQuest : Glorantha — Règles Officielles</div></div>
+  <div class="header-actions">
+    <button class="btn btn-primary" onclick="saveAll()">💾 Sauvegarder</button>
+    <button class="btn" onclick="doExport()">📤 Export JSON</button>
+    <button class="btn" onclick="g('imp').click()">📥 Import JSON</button>
+    <button class="btn" id="theme-toggle" onclick="toggleTheme()">☀️ Clair</button>
+    <button class="btn btn-danger" onclick="resetAll()">🗑 Réinitialiser</button>
+    <input type="file" id="imp" accept=".json" style="display:none" onchange="doImport(event)">
+  </div>
+</div>
+
+<nav class="nav-tabs">
+  <div class="nav-tab active"   onclick="showTab(this,'domaine')">🏰 Domaine</div>
+  <div class="nav-tab"          onclick="showTab(this,'population')">👥 Population</div>
+  <div class="nav-tab"          onclick="showTab(this,'habitations')">🏠 Habitations</div>
+  <div class="nav-tab"          onclick="showTab(this,'agriculture')">🌾 Agriculture</div>
+  <div class="nav-tab"          onclick="showTab(this,'terrain')">🗺 Terrain</div>
+  <div class="nav-tab"          onclick="showTab(this,'structures')">🏗 Structures</div>
+  <div class="nav-tab"          onclick="showTab(this,'fortifications')">🔰 Fortifications</div>
+  <div class="nav-tab"          onclick="showTab(this,'ressources')">⛏ Ressources</div>
+  <div class="nav-tab"          onclick="showTab(this,'sacre')">📅 Temps Sacré</div>
+  <div class="nav-tab"          onclick="showTab(this,'synthese')">📊 Synthèse</div>
+</nav>
+
+<div class="content">
+
+<!-- ═══ DOMAINE ═══ -->
+<div id="sec-domaine" class="section active">
+<div class="card"><div class="card-header"><span class="card-title">⚔ Informations du Domaine</span></div>
+<div class="card-body">
+  <div class="dgrid">
+    <div class="fg"><label class="fl">Nom du domaine</label><input class="fi" id="d-nom" type="text" placeholder="Ex: Val du Dragon" oninput="autosave()"></div>
+    <div class="fg"><label class="fl">Dirigeant</label><input class="fi" id="d-dirigeant" type="text" placeholder="Nom" oninput="autosave()"></div>
+    <div class="fg"><label class="fl">Région / Tribu</label><input class="fi" id="d-region" type="text" placeholder="Sartar, Prax…" oninput="autosave()"></div>
+    <div class="fg"><label class="fl">Culture</label><select class="fi" id="d-culture" onchange="autosave()"><option>Orlanthi</option><option>Lunaire</option><option>Praxien</option><option>Malkioni</option><option>Dara Happan</option><option>Doraddi</option><option>Autre</option></select></div>
+    <div class="fg"><label class="fl">Carucates (hides)</label><input class="fi" id="d-hides" type="number" min="0" placeholder="0" oninput="autosave()"></div>
+    <div class="fg"><label class="fl">Saison actuelle</label><select class="fi" id="d-saison" onchange="autosave()"><option>Saison des Graines</option><option>Saison des Pluies</option><option>Saison des Feux</option><option>Saison des Terres</option><option>Saison Sombre</option><option>Chaos (Sacré)</option></select></div>
+    <div class="fg"><label class="fl">Année (Temps des Saints)</label><input class="fi" id="d-annee" type="text" placeholder="1627 ST" oninput="autosave()"></div>
+    <div class="fg"><label class="fl">Trésorerie (Lunars)</label><input class="fi" id="d-tresor" type="number" placeholder="0" oninput="autosave()"></div>
+    <div class="fg"><label class="fl">Sénéchal / Intendant</label><input class="fi" id="d-senechal" type="text" placeholder="Nom + Intendance%" oninput="autosave()"></div>
+    <div class="fg"><label class="fl">Réputation du domaine</label><input class="fi" id="d-rep" type="text" placeholder="%" oninput="autosave()"></div>
+  </div>
+  <div class="fg"><label class="fl">Notes & Description</label><textarea class="fi" id="d-notes" rows="4" placeholder="Histoire, alliances, particularités…" oninput="autosave()" style="resize:vertical"></textarea></div>
+  <br>
+  <div class="rbox">
+    <strong>Monnaie :</strong> 1 Roue (r) = 20 Lunars (L) = 200 Clacks (C) &nbsp;|&nbsp; 1 L = 10 C &nbsp;|&nbsp; Les prix importants s'expriment en r, les courants en L ou C.<br>
+    <strong>Standards de vie (foyer 2 adultes + 3 enfants/an) :</strong> Démunis : rien &nbsp;|&nbsp; <strong>Pauvres ≈ 15 L/an</strong> — bouillie, hutte &nbsp;|&nbsp; <strong>Libres ≈ 60 L/an</strong> — pain, fromage, viande 1-2×/sem &nbsp;|&nbsp; <strong>Nobles ≈ 200 L/an</strong> — viande, vin, montures &nbsp;|&nbsp; <strong>Roitelets</strong> — gouvernent une province.<br>
+    <strong>1 Carucate (hide)</strong> 80-120 ares = surplus brut <strong>80 L/an</strong> → 64 L net (après 20% dîme temples). Avec fermier tenant : seigneur <strong>32 L</strong>, tenant 32 L. Équivalent : <strong>20 bovins</strong> ou <strong>100 moutons</strong>.<br>
+    <strong>Sénéchal</strong> : Intendance ≥ 50% · garde 10% des profits après que l'employeur a payé son niveau de vie.
+  </div>
+</div></div>
+</div>
+
+<!-- ═══ POPULATION ═══ -->
+<div id="sec-population" class="section">
+<div class="card"><div class="card-header"><span class="card-title">👥 Registre de la Population</span><button class="btn btn-primary" onclick="openModal('mp');clearForm('p')">+ Ajouter</button></div>
+<div class="card-body">
+  <p class="intro">Coûts/revenus annuels en Lunars. Garde du corps : 60 L/an min + armes/armures/magie. Serviteur : 15-30 L/an. Scribe (secrétaire) : 120 L/an. Scribe (administratif) : 200 L/an. Membre de famille du foyer : 0 coût additionnel.</p>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Nom</th><th>Métier</th><th>Standard</th><th>Coût/An (L)</th><th>Revenu/An (L)</th><th>Bilan (L)</th><th>Notes</th><th>Act.</th></tr></thead>
+    <tbody id="tb-pop"></tbody>
+    <tfoot><tr><td colspan="4">TOTAUX POPULATION</td><td id="tp-c"></td><td id="tp-r"></td><td id="tp-b"></td><td colspan="2"></td></tr></tfoot>
+  </table></div>
+  <div class="rdiv">✦ ✧ ✦</div>
+  <div id="pop-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:7px"></div>
+</div></div>
+<div class="card"><div class="card-header"><span class="card-title">📋 Référentiel — Coût/Revenu par métier (L/an)</span></div>
+<div class="card-body">
+  <p class="intro">Format : Coût L / Revenu L par an. Source officielle RQ Glorantha.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Métier</th><th>Démunis</th><th>Pauvres</th><th>Libres</th><th>Nobles</th><th>Roitelets</th></tr></thead>
+    <tbody id="tb-ref-m"></tbody>
+  </table></div>
+</div></div>
+</div>
+
+<!-- ═══ HABITATIONS ═══ -->
+<div id="sec-habitations" class="section">
+<div class="card"><div class="card-header"><span class="card-title">🏠 Habitations</span><button class="btn btn-primary" onclick="openModal('mh');clearForm('h')">+ Ajouter</button></div>
+<div class="card-body">
+  <p class="intro">Logements permanents du domaine. Les prix importants s'expriment en Roues (r). <strong>1r = 20L.</strong> L'entretien est inclus dans le coût de niveau de vie si le logement correspond à ce niveau — à payer séparément sinon. Manquer à l'entretien augmente le degré de délabrement (+1 par an, bonus −20%/degré).</p>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Type</th><th>Occupants</th><th>Coût Const.</th><th>Durée (sais.)</th><th>Entretien/An (L)</th><th>État</th><th>Notes</th><th>Act.</th></tr></thead>
+    <tbody id="tb-hab"></tbody>
+    <tfoot><tr><td colspan="3">TOTAUX</td><td id="th-c"></td><td></td><td id="th-e"></td><td colspan="3"></td></tr></tfoot>
+  </table></div>
+</div></div>
+<div class="card"><div class="card-header"><span class="card-title">📋 Référentiel — Habitations (valeurs officielles)</span></div>
+<div class="card-body"><div class="tw"><table>
+  <thead><tr><th>Type</th><th>Capacité</th><th>Prix</th><th>Durée</th><th>Entretien/An</th><th>Standard</th><th>Description</th></tr></thead>
+  <tbody id="tb-ref-h"></tbody>
+</table></div></div></div>
+</div>
+
+<!-- ═══ AGRICULTURE ═══ -->
+<div id="sec-agriculture" class="section">
+<div class="card"><div class="card-header"><span class="card-title">🌾 Agriculture & Élevage</span><button class="btn btn-primary" onclick="openModal('ma');clearForm('a')">+ Ajouter</button></div>
+<div class="card-body">
+  <p class="intro">1 Carucate = surplus brut 80 L/an → <strong>64 L net</strong> (−20% dîme temples Ernalda+Orlanth). Avec fermier tenant : seigneur <strong>32 L</strong>, tenant 32 L. 20 bovins = 100 moutons = 1 carucate. La compétence Intendance du responsable détermine le revenu réel.</p>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Type</th><th>Quantité / Surface</th><th>Coût Acq. (L)</th><th>Durée (sais.)</th><th>Entretien/An (L)</th><th>Revenu/An (L)</th><th>Bilan</th><th>Notes</th><th>Act.</th></tr></thead>
+    <tbody id="tb-agr"></tbody>
+    <tfoot><tr><td colspan="3">TOTAUX</td><td id="ta-c"></td><td></td><td id="ta-e"></td><td id="ta-r"></td><td id="ta-b"></td><td colspan="2"></td></tr></tfoot>
+  </table></div>
+</div></div>
+<div class="card"><div class="card-header"><span class="card-title">📋 Référentiel — Agriculture & Élevage</span></div>
+<div class="card-body"><div class="tw"><table>
+  <thead><tr><th>Type</th><th>Coût Acq. (L)</th><th>Durée</th><th>Entretien/An (L)</th><th>Revenu/An (L)</th><th>Bilan</th><th>Notes officielles</th></tr></thead>
+  <tbody id="tb-ref-a"></tbody>
+</table></div></div></div>
+</div>
+
+<!-- ═══ TERRAIN ═══ -->
+<div id="sec-terrain" class="section">
+<div class="card"><div class="card-header"><span class="card-title">🗺 Qualité & Éléments du Terrain</span></div>
+<div class="card-body">
+  <div class="rbox">
+    <strong>Qualité de la terre</strong> — Un carucate de qualité au moins Moyenne est supposé pour tout aventurier débutant. La qualité peut s'améliorer ou se dégrader avec le temps, les investissements et la magie. Une année d'efforts peut faire progresser d'un niveau.
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div class="dice-panel">
+        <div style="text-align:center;margin-bottom:10px"><button class="btn-dice" onclick="rollQualite()">🎲 Lancer D100 — Qualité de la Terre</button></div>
+        <div class="dice-result" id="dr-qual" style="font-size:1.4rem">—</div>
+        <div class="dice-label" id="dl-qual">Cliquez pour déterminer la qualité d'un carucate</div>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>Score</th><th>Qualité</th><th>Modificateur</th></tr></thead>
+        <tbody>
+          <tr><td>01–10</td><td class="q-morne">Morne</td><td class="cn">−50%</td></tr>
+          <tr><td>11–30</td><td class="q-clairseme">Clairsemé</td><td class="cn">−20%</td></tr>
+          <tr><td>31–70</td><td class="q-moyen">Moyen</td><td>—</td></tr>
+          <tr><td>71–90</td><td class="q-abondant">Abondant</td><td class="cp">+10%</td></tr>
+          <tr><td>91–100</td><td class="q-luxuriant">Luxuriant</td><td class="cp">+25%</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="dice-panel">
+        <div style="text-align:center;margin-bottom:10px"><button class="btn-dice" onclick="rollElement()">🎲 Lancer D100 — Élément Aléatoire</button></div>
+        <div class="dice-result" id="dr-elem" style="font-size:1.4rem">—</div>
+        <div class="dice-label" id="dl-elem">Cliquez pour déterminer l'élément terrain</div>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>Score</th><th>Élément</th><th>Prix (r / L)</th><th>Effet revenu</th></tr></thead>
+        <tbody>
+          <tr><td>01–02</td><td class="cn">Site chaotique*</td><td>2r / 40L</td><td class="cn">Quasi nul</td></tr>
+          <tr><td>03–06</td><td>Marais</td><td>12r / 240L</td><td class="cn">−20 L/an</td></tr>
+          <tr><td>07–12</td><td>Forêt</td><td>15r / 300L</td><td class="cn">50% revenu</td></tr>
+          <tr><td>13–20</td><td>Escarpement rocheux</td><td>15r / 300L</td><td class="cn">−15 L/an</td></tr>
+          <tr><td>21–30</td><td>Ravin</td><td>18r / 360L</td><td class="cn">−10 L/an</td></tr>
+          <tr><td>31–42</td><td>Champs vallonnés</td><td>22r / 440L</td><td class="cn">−5 L/an</td></tr>
+          <tr><td>43–58</td><td class="q-moyen">Terres arables</td><td>25r / 500L</td><td>Base 40 L/an</td></tr>
+          <tr><td>59–70</td><td class="q-abondant">Plaines fertiles</td><td>28r / 560L</td><td class="cp">+5 L/an</td></tr>
+          <tr><td>71–80</td><td class="q-abondant">Étang</td><td>32r / 640L</td><td class="cp">+10 L/an</td></tr>
+          <tr><td>81–88</td><td class="q-luxuriant">Ruisseau</td><td>35r / 700L</td><td class="cp">+15 L/an</td></tr>
+          <tr><td>89–94</td><td class="q-luxuriant">Rivière</td><td>25r / 500L</td><td class="cp">+20 L/an</td></tr>
+          <tr><td>95–98</td><td class="q-luxuriant">Lac</td><td>35r / 700L</td><td class="cp">+10 L/an</td></tr>
+          <tr><td>99–100</td><td class="q-luxuriant" style="color:#FFD700">Lieu Sacré</td><td>40r / 800L</td><td class="cp">+5% Vénération</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="rdiv" style="margin:16px 0">✦ ✧ ✦</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div class="card-title" style="font-size:.75rem;margin-bottom:10px;color:#CD853F">🏠 RÉSIDENTS EXISTANTS (D100)</div>
+      <div class="dice-panel">
+        <div style="text-align:center;margin-bottom:10px"><button class="btn-dice" onclick="rollResidents()">🎲 Lancer D100 — Résidents</button></div>
+        <div class="dice-result" id="dr-res" style="font-size:1.2rem">—</div>
+        <div class="dice-label" id="dl-res">Qui occupe déjà ce terrain ?</div>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>Score</th><th>Résidents</th></tr></thead>
+        <tbody>
+          <tr><td>01–15</td><td class="cp">Aucun — bâtiment en bon état</td></tr>
+          <tr><td>16–50</td><td style="color:#CD853F">Aucun — bâtiment en mauvais état</td></tr>
+          <tr><td>51–75</td><td>Un ou plusieurs métayers</td></tr>
+          <tr><td>76–90</td><td>1D3 familles auto-suffisantes (sans autorisation)</td></tr>
+          <tr><td>91–95</td><td class="cn">Gang de 3+1D6 bandits/criminels/fugitifs</td></tr>
+          <tr><td>96–100</td><td class="cn">Abandonné mais habité par 1+ monstre (MJ)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="card-title" style="font-size:.75rem;margin-bottom:10px;color:#CD853F">📝 NOTES TERRAIN</div>
+      <div class="fg"><label class="fl">Qualité des terres possédées</label>
+        <select class="fi" id="t-qualite" onchange="autosave()">
+          <option value="">— non déterminé —</option>
+          <option value="morne">Morne (−50% récolte)</option>
+          <option value="clairseme">Clairsemé (−20% récolte)</option>
+          <option value="moyen">Moyen (normal)</option>
+          <option value="abondant">Abondant (+10% récolte)</option>
+          <option value="luxuriant">Luxuriant (+25% récolte)</option>
+        </select>
+      </div>
+      <div class="fg" style="margin-top:10px"><label class="fl">Éléments de terrain (notes)</label>
+        <textarea class="fi" id="t-elements" rows="4" placeholder="Ex: ruisseau traversant (+15L/an), ravin nord-ouest (−10L/an sans pont)…" oninput="autosave()" style="resize:vertical"></textarea>
+      </div>
+      <div class="fg" style="margin-top:10px"><label class="fl">Modificateur annuel total (L)</label>
+        <input class="fi" id="t-modif" type="number" placeholder="±0" oninput="autosave()" title="Bonus/malus annuel issu des éléments de terrain">
+      </div>
+    </div>
+  </div>
+  <div class="rbox-magic" style="margin-top:14px">
+    <strong>Concessions de terre :</strong> 1 carucate = petit don ou lien de loyauté · 2-4 = don notable · 5+ = présent considérable (noblesse) · 10+ = acteur politique majeur de la région. Un aventurier doit avoir une Réputation modifiée &gt;25% pour recevoir un don de terres (sinon : valeur équivalente en Roues + bétail + +1% Réputation/carucate non concédé).
+  </div>
+</div></div>
+</div>
+
+<!-- ═══ STRUCTURES CIVILES ═══ -->
+<div id="sec-structures" class="section">
+<div class="card"><div class="card-header"><span class="card-title">🏗 Structures & Améliorations de Domaine</span><button class="btn btn-primary" onclick="openModal('ms');clearForm('s')">+ Ajouter</button></div>
+<div class="card-body">
+  <p class="intro">Améliorations de domaine — structures civiles, religieuses, commerciales. Artisan qualifié : 3–10 C/jour · Manœuvre : 1–2 C/jour. Entretien à payer chaque année au Temps Sacré. Manquer = dégradation (−20% bonus/degré, effondrement au 5ème). <strong>1r = 20L.</strong></p>
+  <div class="filter-bar">
+    <button class="fbtn active" onclick="filterStr(this,'all')">Tous</button>
+    <button class="fbtn" onclick="filterStr(this,'Civil')">Civil</button>
+    <button class="fbtn" onclick="filterStr(this,'Religieux')">Religieux</button>
+    <button class="fbtn" onclick="filterStr(this,'Commerce')">Commerce</button>
+    <button class="fbtn" onclick="filterStr(this,'Amélioration')">Améliorations agricoles</button>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Structure</th><th>Type</th><th>Coût Const.</th><th>Durée (sais.)</th><th>Entretien/An (L)</th><th>Revenu/An (L)</th><th>Bilan/An</th><th>Bonus</th><th>État</th><th>Notes</th><th>Act.</th></tr></thead>
+    <tbody id="tb-str"></tbody>
+    <tfoot><tr><td colspan="3">TOTAUX</td><td id="ts-c"></td><td></td><td id="ts-e"></td><td id="ts-r"></td><td id="ts-b"></td><td colspan="4"></td></tr></tfoot>
+  </table></div>
+</div></div>
+<div class="card"><div class="card-header"><span class="card-title">📋 Référentiel — Améliorations de domaine (valeurs officielles)</span></div>
+<div class="card-body"><div class="tw"><table>
+  <thead><tr><th>Structure</th><th>Type</th><th>Coût</th><th>Durée</th><th>Entretien/An</th><th>Revenu/An</th><th>Bonus / Effet</th></tr></thead>
+  <tbody id="tb-ref-s"></tbody>
+</table></div></div></div>
+</div>
+
+<!-- ═══ FORTIFICATIONS ═══ -->
+<div id="sec-fortifications" class="section">
+<div class="card"><div class="card-header"><span class="card-title">🔰 Fortifications</span><button class="btn btn-primary" onclick="openModal('mf2');clearForm('f2')">+ Ajouter</button></div>
+<div class="card-body">
+  <p class="intro">Défenses du domaine. Organisées au niveau tribal, clan ou seigneurial. La milice peut fournir la main-d'œuvre dans le cadre de son service annuel. Un siège nécessite de pénétrer le périmètre défensif. <strong>1r = 20L.</strong></p>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Structure</th><th>Coût Const.</th><th>Durée (sais.)</th><th>Entretien/An (L)</th><th>État</th><th>Notes</th><th>Act.</th></tr></thead>
+    <tbody id="tb-fort"></tbody>
+    <tfoot><tr><td colspan="2">TOTAUX</td><td id="tf-c"></td><td></td><td id="tf-e"></td><td colspan="3"></td></tr></tfoot>
+  </table></div>
+</div></div>
+<div class="card"><div class="card-header"><span class="card-title">📋 Référentiel — Fortifications (valeurs officielles)</span></div>
+<div class="card-body"><div class="tw"><table>
+  <thead><tr><th>Structure</th><th>Prix</th><th>Durée</th><th>Entretien/An</th><th>Description</th></tr></thead>
+  <tbody id="tb-ref-f"></tbody>
+</table></div></div></div>
+</div>
+
+<!-- ═══ RESSOURCES ═══ -->
+<div id="sec-ressources" class="section">
+<div class="card"><div class="card-header"><span class="card-title">⛏ Ressources Productives</span><button class="btn btn-primary" onclick="openModal('mr');clearForm('r')">+ Ajouter</button></div>
+<div class="card-body">
+  <p class="intro">Installations productrices de revenus spéciaux. Sel, vin Clearwine et métaux précieux très recherchés en Glorantha. Un magasin requiert un marchand compétent. Verger et vignes : plusieurs années avant maturité.</p>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Type</th><th>Détail</th><th>Coût Const. (L)</th><th>Durée (sais.)</th><th>Entretien/An (L)</th><th>Revenu/An (L)</th><th>Bilan</th><th>État</th><th>Notes</th><th>Act.</th></tr></thead>
+    <tbody id="tb-res"></tbody>
+    <tfoot><tr><td colspan="3">TOTAUX</td><td id="tr-c"></td><td></td><td id="tr-e"></td><td id="tr-r"></td><td id="tr-b"></td><td colspan="3"></td></tr></tfoot>
+  </table></div>
+</div></div>
+<div class="card"><div class="card-header"><span class="card-title">📋 Référentiel — Ressources</span></div>
+<div class="card-body"><div class="tw"><table>
+  <thead><tr><th>Type</th><th>Coût (L)</th><th>Durée</th><th>Entretien/An (L)</th><th>Revenu/An (L)</th><th>Bilan</th><th>Notes</th></tr></thead>
+  <tbody id="tb-ref-r"></tbody>
+</table></div></div></div>
+</div>
+
+<!-- ═══ TEMPS SACRÉ ═══ -->
+<div id="sec-sacre" class="section">
+<div class="card"><div class="card-header"><span class="card-title">📅 Temps Sacré — Bilan Annuel</span></div>
+<div class="card-body">
+  <p class="intro">Pendant le Temps Sacré, les aventuriers testent leurs récoltes, génèrent le revenu annuel et paient niveau de vie + entretien. Les trois tests sont : <strong>Augures</strong> (présages divins), <strong>Récoltes</strong> (production agricole), <strong>Revenu d'occupation</strong> (activité principale). Ces tests utilisent les compétences appropriées.</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+    <!-- AUGURES -->
+    <div class="test-panel">
+      <div style="font-family:'MedievalSharp',cursive;color:#c070c0;font-size:.78rem;margin-bottom:8px;text-align:center">✦ TEST D'AUGURES</div>
+      <div style="font-size:.8rem;color:#a080a0;margin-bottom:8px;line-height:1.5">Compétence : <strong>Vénération</strong> ou compétence runique. Détermine les présages pour l'année.</div>
+      <div class="fg"><label class="fl">Compétence + Bonus (%)</label>
+        <input class="fi" id="ts-aug-val" type="number" placeholder="Ex: 75" style="text-align:center">
+      </div>
+      <div id="ts-aug-bonus" style="font-size:.78rem;color:#c070c0;margin:6px 0;min-height:20px"></div>
+      <div style="text-align:center;margin:8px 0"><button class="btn-dice" onclick="doRoll('aug')">🎲 Lancer D100</button></div>
+      <div class="dice-result" id="dr-aug" style="font-size:1.4rem">—</div>
+      <div id="dl-aug" style="font-size:.72rem;text-align:center;color:#9060b0;margin-top:4px"></div>
+    </div>
+    <!-- RÉCOLTES -->
+    <div class="test-panel">
+      <div style="font-family:'MedievalSharp',cursive;color:#6abf7b;font-size:.78rem;margin-bottom:8px;text-align:center">🌾 TEST DE RÉCOLTE</div>
+      <div style="font-size:.8rem;color:#50a070;margin-bottom:8px;line-height:1.5">Compétence : <strong>Intendance</strong> ou <strong>Agriculture</strong>. Détermine le surplus agricole.</div>
+      <div class="fg"><label class="fl">Compétence + Bonus</label>
+        <input class="fi" id="ts-rec-val" type="number" placeholder="Ex: 65" style="text-align:center">
+      </div>
+      <div id="ts-rec-bonus" style="font-size:.78rem;color:#6abf7b;margin:6px 0;min-height:20px"></div>
+      <div style="text-align:center;margin:8px 0"><button class="btn-dice" onclick="doRoll('rec')">🎲 Lancer D100</button></div>
+      <div class="dice-result" id="dr-rec" style="font-size:1.4rem">—</div>
+      <div id="dl-rec" style="font-size:.72rem;text-align:center;color:#50a070;margin-top:4px"></div>
+    </div>
+    <!-- REVENU OCCUPATION -->
+    <div class="test-panel">
+      <div style="font-family:'MedievalSharp',cursive;color:#CD853F;font-size:.78rem;margin-bottom:8px;text-align:center">⚔ REVENU D'OCCUPATION</div>
+      <div style="font-size:.8rem;color:#a07040;margin-bottom:8px;line-height:1.5">Compétence d'occupation principale. Revenu lié aux activités professionnelles de l'aventurier.</div>
+      <div class="fg"><label class="fl">Compétence + Bonus</label>
+        <input class="fi" id="ts-occ-val" type="number" placeholder="Ex: 80" style="text-align:center">
+      </div>
+      <div id="ts-occ-bonus" style="font-size:.78rem;color:#CD853F;margin:6px 0;min-height:20px"></div>
+      <div style="text-align:center;margin:8px 0"><button class="btn-dice" onclick="doRoll('occ')">🎲 Lancer D100</button></div>
+      <div class="dice-result" id="dr-occ" style="font-size:1.4rem">—</div>
+      <div id="dl-occ" style="font-size:.72rem;text-align:center;color:#a07040;margin-top:4px"></div>
+    </div>
+  </div>
+
+  <div class="rdiv">✦ ✧ ✦</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+    <!-- ACTIONS AVENTURIERS -->
+    <div>
+      <div class="card-title" style="font-size:.75rem;margin-bottom:10px;color:#CD853F">⚔ ACTIONS DES AVENTURIERS (bonus applicables)</div>
+      <div class="tw"><table>
+        <thead><tr><th>Type d'Action</th><th>Effet</th></tr></thead>
+        <tbody>
+          <tr><td>Action religieuse/spirituelle <em>mineure</em> (≤2 sem. / 1-2 pts Rune)</td><td class="cp">+1 Augures</td></tr>
+          <tr><td>Action religieuse/spirituelle <em>majeure</em> (>2 sem. / 3+ pts Rune)</td><td class="cp">+2 Augures</td></tr>
+          <tr><td>Aide <em>mineure</em> aux résidents (&lt;2 sem. / 1-2 pts Rune)</td><td class="cp">+5 Récolte</td></tr>
+          <tr><td>Aide <em>majeure</em> aux résidents (>2 sem. / 3+ pts Rune)</td><td class="cp">+10 Récolte</td></tr>
+          <tr><td>Soutien mineur à l'occupation (&lt;2 sem. / 1-2 pts Rune)</td><td class="cp">+5% compétence</td></tr>
+          <tr><td>Soutien majeur à l'occupation (>2 sem. / 3+ pts Rune)</td><td class="cp">+10% compétence</td></tr>
+          <tr><td>Négliger entraînement/recherches pendant 1 saison</td><td class="cp">+1D6 à un test</td></tr>
+        </tbody>
+      </table></div>
+      <div class="fg" style="margin-top:12px"><label class="fl">Actions réalisées cette année (notes)</label>
+        <textarea class="fi" id="ts-actions" rows="4" placeholder="Ex: Apaisé esprit courroucé (+1 Augures), réparé grange après tempête (+5 Récolte)…" oninput="autosave()" style="resize:vertical"></textarea>
+      </div>
+    </div>
+
+    <!-- ÉVÉNEMENTS LOCAUX -->
+    <div>
+      <div class="card-title" style="font-size:.75rem;margin-bottom:10px;color:#CD853F">🌩 ÉVÉNEMENTS LOCAUX (D100)</div>
+      <div class="rbox-magic" style="font-size:.8rem;margin-bottom:10px">Lancer APRÈS les tests familiaux et AVANT le test d'Augures. Tirez pour chaque aventurier propriétaire de terres. Ajoutez +5 par carucate possédé au-delà du premier. Soustrayez 1 par Lunar offert aux temples de la Terre.</div>
+      <div style="text-align:center;margin-bottom:10px">
+        <input class="fi" id="ev-mod" type="number" placeholder="Modificateur" style="width:120px;display:inline-block;text-align:center">
+        &nbsp;
+        <button class="btn-dice" onclick="rollEvent()">🎲 Lancer D100+mod</button>
+      </div>
+      <div id="ev-result" class="event-result" style="min-height:80px;font-size:.85rem;line-height:1.6">
+        <em style="color:#6a5a4a">Tirez les dés pour voir l'événement…</em>
+      </div>
+      <div id="ts-event-log" style="margin-top:10px;max-height:200px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div></div>
+
+<div class="card"><div class="card-header"><span class="card-title">📋 Table des Événements Locaux (référence complète)</span></div>
+<div class="card-body"><div class="tw"><table>
+  <thead><tr><th>Score D100</th><th>Événement</th><th>Effet sur les tests</th></tr></thead>
+  <tbody>
+    <tr><td>≤01</td><td class="cp">✦ Événement céleste (étoile, comète…)</td><td class="cp">+15 Augures</td></tr>
+    <tr><td>02–05</td><td class="cp">Animal sacré aperçu</td><td class="cp">+10 Augures (ou +20 si chasse réussie, −10 si échouée)</td></tr>
+    <tr><td>06–10</td><td class="cp">Tout est tranquille</td><td class="cp">+5 Augures</td></tr>
+    <tr><td>11–50</td><td>Rien de notable</td><td>Aucun effet</td></tr>
+    <tr><td>51–55</td><td class="cn">🔥 Incendie</td><td class="cn">−10 récolte l'an prochain si non maîtrisé*</td></tr>
+    <tr><td>56–60</td><td class="cn">🐛 Vermine (insectes, rongeurs…)</td><td class="cn">−10 récolte l'an prochain si non traité</td></tr>
+    <tr><td>61–70</td><td class="cn">⚔ Raid mineur (10% chance trolls/Monteurs)</td><td class="cn">−10 récolte l'an prochain si non stoppé*</td></tr>
+    <tr><td>71–75</td><td class="cn">🌋 Séisme (Déesse de la Terre mécontente)</td><td class="cn">−10 Augures (quête héroïque/intervention divine)*</td></tr>
+    <tr><td>76–80</td><td class="cn">☠ Maladie (envoyée par Mallia)</td><td class="cn">−10 récolte/saison cumulatif (champs 1-4, bétail 5-6)</td></tr>
+    <tr><td>81–85</td><td class="cn">⚔⚔ Raid majeur (10% chance trolls)</td><td class="cn">−20 récolte l'an prochain si non stoppé*</td></tr>
+    <tr><td>86–90</td><td class="cn">☀ Sécheresse</td><td class="cn">−15 récolte l'an prochain (quête héroïque)</td></tr>
+    <tr><td>91–95</td><td class="cn">⚔⚔⚔ Invasion (installation permanente)</td><td class="cn">−20 récolte l'an prochain si non stoppée*</td></tr>
+    <tr><td>96–99</td><td class="cn">🌊 Inondation</td><td class="cn">−20 récolte l'an prochain (quête héroïque)*</td></tr>
+    <tr><td>100+</td><td class="cn" style="font-weight:700">💀 Incursion du Chaos !</td><td class="cn">−40 récolte l'an prochain si non stoppée</td></tr>
+  </tbody>
+</table></div>
+<div style="font-size:.8rem;color:#666;margin-top:8px;font-style:italic">* Au gré de la MJ : dommages additionnels aux bâtiments ou améliorations.</div>
+</div></div>
+</div>
+
+<!-- ═══ SYNTHÈSE ═══ -->
+<div id="sec-synthese" class="section">
+<div class="card"><div class="card-header"><span class="card-title">📊 Tableau de Synthèse du Domaine</span></div>
+<div class="card-body">
+  <div id="sy-hd" style="margin-bottom:14px;font-style:italic;color:#888"></div>
+  <div class="sg" id="sy-bd"></div>
+  <div class="rdiv" style="margin:14px 0">✦ ✧ ✦</div>
+  <div class="tw"><table>
+    <thead><tr><th>Catégorie</th><th>Élément</th><th>Détail</th><th>Coût Initial (L)</th><th>Entretien/An (L)</th><th>Revenu/An (L)</th><th>Bilan/An (L)</th></tr></thead>
+    <tbody id="tb-sy"></tbody>
+    <tfoot><tr><td colspan="3">GRAND TOTAL</td><td id="gt-c"></td><td id="gt-e"></td><td id="gt-r"></td><td id="gt-b"></td></tr></tfoot>
+  </table></div>
+  <div style="margin-top:16px" id="sy-niveau"></div>
+</div></div>
+</div>
+
+</div><!-- /content -->
+
+<!-- MODAL POPULATION -->
+<div class="modal-overlay" id="mp">
+<div class="modal"><div class="mt">👤 Habitant / Serviteur</div>
+  <input type="hidden" id="p-eid">
+  <div class="fr"><div class="fg"><label class="fl">Nom</label><input class="fi" id="p-nom" type="text"></div><div class="fg"><label class="fl">Métier</label><select class="fi" id="p-met" onchange="afp()"><option value="">— choisir —</option></select></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Standard de Vie</label><select class="fi" id="p-std" onchange="afp()"><option value="destitue">Démunis</option><option value="pauvre">Pauvres</option><option value="libre" selected>Libres</option><option value="noble">Nobles</option><option value="roitelet">Roitelets</option></select></div><div class="fg"><label class="fl">Coût/An (L)</label><input class="fi" id="p-c" type="number"></div><div class="fg"><label class="fl">Revenu/An (L)</label><input class="fi" id="p-r" type="number"></div></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="p-n" type="text"></div>
+  <div class="mf"><button class="btn" onclick="closeModal('mp')">Annuler</button><button class="btn btn-primary" onclick="savePop()">Enregistrer</button></div>
+</div></div>
+
+<!-- MODAL HABITATION -->
+<div class="modal-overlay" id="mh">
+<div class="modal"><div class="mt">🏠 Habitation</div>
+  <input type="hidden" id="h-eid">
+  <div class="fr"><div class="fg"><label class="fl">Type</label><select class="fi" id="h-typ" onchange="afh()"><option value="">— choisir —</option></select></div><div class="fg"><label class="fl">Occupants</label><input class="fi" id="h-occ" type="text"></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Coût Const. (L)</label><input class="fi" id="h-c" type="number"></div><div class="fg"><label class="fl">Durée (saisons)</label><input class="fi" id="h-d" type="number"></div><div class="fg"><label class="fl">Entretien/An (L)</label><input class="fi" id="h-e" type="number"></div></div>
+  <div class="fr"><div class="fg"><label class="fl">État</label><select class="fi" id="h-et"><option>En projet</option><option>En construction</option><option>Habitée</option><option>Inoccupée</option><option>Endommagée</option></select></div></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="h-n" type="text"></div>
+  <div class="mf"><button class="btn" onclick="closeModal('mh')">Annuler</button><button class="btn btn-primary" onclick="saveHab()">Enregistrer</button></div>
+</div></div>
+
+<!-- MODAL AGRICULTURE -->
+<div class="modal-overlay" id="ma">
+<div class="modal"><div class="mt">🌾 Agriculture / Élevage</div>
+  <input type="hidden" id="a-eid">
+  <div class="fr"><div class="fg"><label class="fl">Type</label><select class="fi" id="a-typ" onchange="afa()"><option value="">— choisir —</option></select></div><div class="fg"><label class="fl">Quantité / Surface</label><input class="fi" id="a-q" type="text" placeholder="Ex: 2 carucates, 20 bovins"></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Coût Acq. (L)</label><input class="fi" id="a-c" type="number"></div><div class="fg"><label class="fl">Durée (sais.)</label><input class="fi" id="a-d" type="number"></div><div class="fg"><label class="fl">Entretien/An (L)</label><input class="fi" id="a-e" type="number"></div><div class="fg"><label class="fl">Revenu/An (L)</label><input class="fi" id="a-r" type="number"></div></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="a-n" type="text"></div>
+  <div class="mf"><button class="btn" onclick="closeModal('ma')">Annuler</button><button class="btn btn-primary" onclick="saveAgr()">Enregistrer</button></div>
+</div></div>
+
+<!-- MODAL STRUCTURE -->
+<div class="modal-overlay" id="ms">
+<div class="modal"><div class="mt">🏗 Structure / Amélioration</div>
+  <input type="hidden" id="s-eid">
+  <div class="fr"><div class="fg" style="grid-column:1/-1"><label class="fl">Type</label><select class="fi" id="s-typ" onchange="afs()"><option value="">— choisir —</option></select></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Coût Const. (L)</label><input class="fi" id="s-c" type="number"></div><div class="fg"><label class="fl">Durée (saisons)</label><input class="fi" id="s-d" type="number"></div><div class="fg"><label class="fl">Entretien/An (L)</label><input class="fi" id="s-e" type="number"></div><div class="fg"><label class="fl">Revenu/An (L)</label><input class="fi" id="s-r" type="number"></div></div>
+  <div class="fr"><div class="fg"><label class="fl">État</label><select class="fi" id="s-et"><option>En projet</option><option>En construction</option><option>Opérationnel</option><option>Endommagé</option><option>En ruine</option></select></div></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="s-n" type="text"></div>
+  <div class="mf"><button class="btn" onclick="closeModal('ms')">Annuler</button><button class="btn btn-primary" onclick="saveStr()">Enregistrer</button></div>
+</div></div>
+
+<!-- MODAL FORTIFICATION -->
+<div class="modal-overlay" id="mf2">
+<div class="modal"><div class="mt">🔰 Fortification</div>
+  <input type="hidden" id="f2-eid">
+  <div class="fr"><div class="fg" style="grid-column:1/-1"><label class="fl">Type</label><select class="fi" id="f2-typ" onchange="aff2()"><option value="">— choisir —</option></select></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Coût Const. (L)</label><input class="fi" id="f2-c" type="number"></div><div class="fg"><label class="fl">Durée (saisons)</label><input class="fi" id="f2-d" type="number"></div><div class="fg"><label class="fl">Entretien/An (L)</label><input class="fi" id="f2-e" type="number"></div></div>
+  <div class="fr"><div class="fg"><label class="fl">État</label><select class="fi" id="f2-et"><option>En projet</option><option>En construction</option><option>Opérationnel</option><option>Endommagé</option><option>Démoli</option></select></div></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="f2-n" type="text"></div>
+  <div class="mf"><button class="btn" onclick="closeModal('mf2')">Annuler</button><button class="btn btn-primary" onclick="saveFort()">Enregistrer</button></div>
+</div></div>
+
+<!-- MODAL RESSOURCE -->
+<div class="modal-overlay" id="mr">
+<div class="modal"><div class="mt">⛏ Ressource</div>
+  <input type="hidden" id="r-eid">
+  <div class="fr"><div class="fg"><label class="fl">Type</label><select class="fi" id="r-typ" onchange="afr()"><option value="">— choisir —</option></select></div><div class="fg"><label class="fl">Détail</label><input class="fi" id="r-det" type="text"></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Coût Const. (L)</label><input class="fi" id="r-c" type="number"></div><div class="fg"><label class="fl">Durée (sais.)</label><input class="fi" id="r-d" type="number"></div><div class="fg"><label class="fl">Entretien/An (L)</label><input class="fi" id="r-e" type="number"></div><div class="fg"><label class="fl">Revenu/An (L)</label><input class="fi" id="r-r" type="number"></div></div>
+  <div class="fr"><div class="fg"><label class="fl">État</label><select class="fi" id="r-et"><option>En projet</option><option>En construction</option><option>Opérationnel</option><option>Endommagé</option><option>Épuisé</option></select></div></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="r-n" type="text"></div>
+  <div class="mf"><button class="btn" onclick="closeModal('mr')">Annuler</button><button class="btn btn-primary" onclick="saveRes()">Enregistrer</button></div>
+</div></div>
+
+<div class="toast" id="toast">✓ Sauvegardé</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DONNÉES OFFICIELLES — RuneQuest Glorantha
+// Sources: Livre de base p.403-413 (EN) + Règles Domaine (FR)
+// 1 Roue (r) = 20 Lunars (L) = 200 Clacks (C)
+// ═══════════════════════════════════════════════════════
+
+const STD_LBL = {destitue:'Démunis',pauvre:'Pauvres',libre:'Libres',noble:'Nobles',roitelet:'Roitelets'};
+const STD_CSS = {destitue:'sd',pauvre:'sp',libre:'sl',noble:'sn',roitelet:'sr'};
+
+const METIERS = [
+  {nom:"Habitant (générique)",         destitue:{c:0,r:2},   pauvre:{c:8,r:5},    libre:{c:30,r:12},   noble:{c:100,r:0},   roitelet:{c:400,r:0}},
+  {nom:"Agriculteur libre (fermier)",  destitue:{c:0,r:0},   pauvre:{c:8,r:16},   libre:{c:30,r:32},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Agriculteur libre (propre)",   destitue:{c:0,r:0},   pauvre:{c:8,r:32},   libre:{c:30,r:64},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Pêcheur",                      destitue:{c:0,r:8},   pauvre:{c:8,r:20},   libre:{c:30,r:40},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Berger (100 brebis = 1 hide)", destitue:{c:0,r:0},   pauvre:{c:8,r:16},   libre:{c:30,r:32},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Chasseur",                     destitue:{c:0,r:10},  pauvre:{c:8,r:25},   libre:{c:30,r:45},   noble:{c:100,r:20},  roitelet:{c:0,r:0}},
+  {nom:"Forgeron",                     destitue:{c:2,r:20},  pauvre:{c:8,r:50},   libre:{c:30,r:100},  noble:{c:100,r:60},  roitelet:{c:0,r:0}},
+  {nom:"Charpentier",                  destitue:{c:2,r:15},  pauvre:{c:8,r:35},   libre:{c:30,r:75},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Maçon / Tailleur de pierre",   destitue:{c:2,r:15},  pauvre:{c:8,r:35},   libre:{c:30,r:75},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Brasseur",                     destitue:{c:2,r:20},  pauvre:{c:8,r:45},   libre:{c:30,r:90},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Tisserand",                    destitue:{c:2,r:12},  pauvre:{c:8,r:30},   libre:{c:30,r:60},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Potier",                       destitue:{c:2,r:10},  pauvre:{c:8,r:25},   libre:{c:30,r:50},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Tanneur / Maroquinier",        destitue:{c:2,r:10},  pauvre:{c:8,r:30},   libre:{c:30,r:60},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Bijoutier",                    destitue:{c:3,r:20},  pauvre:{c:8,r:60},   libre:{c:30,r:120},  noble:{c:100,r:80},  roitelet:{c:0,r:0}},
+  {nom:"Marchand",                     destitue:{c:0,r:0},   pauvre:{c:8,r:40},   libre:{c:30,r:120},  noble:{c:100,r:200}, roitelet:{c:400,r:500}},
+  {nom:"Guérisseur (Chalana Arroy)",   destitue:{c:0,r:0},   pauvre:{c:8,r:30},   libre:{c:30,r:60},   noble:{c:100,r:40},  roitelet:{c:0,r:0}},
+  {nom:"Prêtre runique",               destitue:{c:0,r:0},   pauvre:{c:8,r:0},    libre:{c:30,r:10},   noble:{c:100,r:0},   roitelet:{c:400,r:0}},
+  {nom:"Noble / Chef de clan",         destitue:{c:0,r:0},   pauvre:{c:0,r:0},    libre:{c:0,r:0},     noble:{c:200,r:200}, roitelet:{c:800,r:400}},
+  {nom:"Guerrier (thaïne)",            destitue:{c:0,r:0},   pauvre:{c:0,r:0},    libre:{c:60,r:0},    noble:{c:120,r:0},   roitelet:{c:300,r:0}},
+  {nom:"Garde du corps (p.404)",       destitue:{c:0,r:0},   pauvre:{c:0,r:0},    libre:{c:60,r:0},    noble:{c:120,r:0},   roitelet:{c:0,r:0}},
+  {nom:"Serviteur (p.404)",            destitue:{c:0,r:0},   pauvre:{c:15,r:0},   libre:{c:30,r:0},    noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Scribe (secrétaire, p.404)",   destitue:{c:0,r:0},   pauvre:{c:0,r:0},    libre:{c:120,r:30},  noble:{c:200,r:50},  roitelet:{c:400,r:80}},
+  {nom:"Scribe (administratif, p.404)",destitue:{c:0,r:0},   pauvre:{c:0,r:0},    libre:{c:200,r:50},  noble:{c:300,r:80},  roitelet:{c:500,r:100}},
+  {nom:"Sénéchal (intendant)",         destitue:{c:0,r:0},   pauvre:{c:0,r:0},    libre:{c:60,r:0},    noble:{c:120,r:0},   roitelet:{c:0,r:0}},
+  {nom:"Philosophe / Sage",            destitue:{c:0,r:0},   pauvre:{c:8,r:5},    libre:{c:30,r:10},   noble:{c:100,r:5},   roitelet:{c:0,r:0}},
+  {nom:"Voleur",                       destitue:{c:0,r:5},   pauvre:{c:8,r:20},   libre:{c:30,r:50},   noble:{c:0,r:0},     roitelet:{c:0,r:0}},
+  {nom:"Assistant Chaman",             destitue:{c:0,r:0},   pauvre:{c:8,r:10},   libre:{c:30,r:20},   noble:{c:100,r:10},  roitelet:{c:0,r:0}},
+  {nom:"Artiste (danse/musique/chant)",destitue:{c:2,r:5},   pauvre:{c:8,r:15},   libre:{c:30,r:30},   noble:{c:100,r:20},  roitelet:{c:400,r:10}},
+];
+
+// Habitations — valeurs officielles RQ (Règles Domaine, p.107)
+// Prix: L (lunars). Conversion: 1r = 20L
+const HABITATIONS = [
+  {nom:"Abri",              cap:"1-2",   cout:1,     duree:0.25, ent:0,    std:"Démunis",        desc:"4 murs + toit chaume. Bois vert/argile. Gratuit avec Survie."},
+  {nom:"Hutte",             cap:"3-5",   cout:2,     duree:1,    ent:1,    std:"Pauvres",        desc:"Boue séchée, argile, bois ou pierre. 1 pièce, âtre central."},
+  {nom:"Hutte sur pilotis", cap:"3-5",   cout:170,   duree:0.75, ent:3,    std:"Pauvres/Libres", desc:"Zones humides / canards / bords d'eau. (2-15r selon soin)"},
+  {nom:"Petite maison",     cap:"5-8",   cout:300,   duree:2,    ent:50,   std:"Libres",         desc:"Charpente bois + briques. Jusqu'à 4 pièces. (= 15r)"},
+  {nom:"Grande maison",     cap:"8-12",  cout:1400,  duree:3,    ent:100,  std:"Libres/Nobles",  desc:"1-2 niveaux, 6-8 pièces, dépendances serviteurs. (40-100r, moy. 70r)"},
+  {nom:"Villa",             cap:"10-15", cout:4000,  duree:9,    ent:400,  std:"Nobles",         desc:"Pierre/marbre, cour, plusieurs serviteurs. +1D3% Réputation. (= 200r)"},
+  {nom:"Palais",            cap:"20+",   cout:10000, duree:12,   ent:1000, std:"Roitelets",      desc:"Complexe multi-bâtiments, 5-8 serviteurs plein-temps. +1D6%/500r. (500r+)"},
+];
+
+// Structures civiles/religieuses/commerciales — Améliorations de domaine
+// Prix en L (1r = 20L). Source: Règles Domaine p.110-112
+const STRUCTURES = [
+  // Civil
+  {nom:"Aqueduc (100m)",              type:"Civil",      tag:"tc",  cout:40,   duree:1.5, ent:4,   rev:0,   bonus:"+5 test récolte / irrigue"},
+  {nom:"Barrage à poissons",          type:"Civil",      tag:"tc",  cout:20,   duree:0.5, ent:2,   rev:0,   bonus:"Capture poissons en rivière"},
+  {nom:"Petit barrage",               type:"Civil",      tag:"tc",  cout:40,   duree:1,   ent:4,   rev:0,   bonus:"Réservoir pour irrigation"},
+  {nom:"Carrière",                    type:"Civil",      tag:"tc",  cout:500,  duree:1,   ent:50,  rev:80,  bonus:"Pierre, minerai. (= 25r)"},
+  {nom:"Citerne",                     type:"Civil",      tag:"tc",  cout:20,   duree:0.5, ent:2,   rev:0,   bonus:"Stockage eau (argile/chaux)"},
+  {nom:"Entrepôt",                    type:"Amélioration",tag:"tam",cout:200,  duree:1,   ent:10,  rev:0,   bonus:"Garde surplus pour l'an suivant. (= 10r)"},
+  {nom:"Étable / Grange",             type:"Amélioration",tag:"tam",cout:30,   duree:0.75,ent:3,   rev:0,   bonus:"+5% revenu troupeau/carucate"},
+  {nom:"Puits",                       type:"Civil",      tag:"tc",  cout:60,   duree:0.5, ent:2,   rev:0,   bonus:"Eau loin de cours d'eau"},
+  {nom:"Pont en bois",                type:"Civil",      tag:"tc",  cout:12,   duree:0.5, ent:2,   rev:0,   bonus:"−50% pénalité ravin/rivière"},
+  {nom:"Pont en pierre",              type:"Civil",      tag:"tc",  cout:30,   duree:1.5, ent:3,   rev:0,   bonus:"Annule pénalité ravin/rivière"},
+  {nom:"Route pavée (5 km)",          type:"Civil",      tag:"tc",  cout:400,  duree:3,   ent:10,  rev:0,   bonus:"+5% Intendance / annule champs vallonnés. (= 20r)"},
+  {nom:"Route de terre (5 km)",       type:"Civil",      tag:"tc",  cout:40,   duree:1,   ent:0,   rev:0,   bonus:"Annule champs vallonnés"},
+  {nom:"Système d'irrigation",        type:"Amélioration",tag:"tam",cout:10,   duree:0.75,ent:1,   rev:0,   bonus:"+5 test de récolte"},
+  {nom:"Taillis (boisé géré)",        type:"Amélioration",tag:"tam",cout:10,   duree:3,   ent:2,   rev:20,  bonus:"Bois hampes, arcs, flèches"},
+  {nom:"Petit caravansérail",         type:"Commerce",   tag:"tk",  cout:900,  duree:0.75,ent:180, rev:200, bonus:"+5% Intendance. 5 chariots. (= 45r)"},
+  {nom:"Grand caravansérail",         type:"Commerce",   tag:"tk",  cout:1500, duree:1.5, ent:300, rev:400, bonus:"+10% Intendance. 15 chariots. Sur route. (= 75r)"},
+  {nom:"Magasin / Boutique",          type:"Commerce",   tag:"tk",  cout:200,  duree:0.75,ent:20,  rev:80,  bonus:"+5% Intendance. Requiert marchand. (= 10r)"},
+  {nom:"Mobilier exotique",           type:"Civil",      tag:"tc",  cout:55,   duree:0.75,ent:5,   rev:0,   bonus:"+1% Réputation si invités rang égal+"},
+  // Religieux
+  {nom:"Autel en plein air",          type:"Religieux",  tag:"tr_", cout:50,   duree:0.5, ent:5,   rev:0,   bonus:"+3% Vénération culte"},
+  {nom:"Sanctuaire (p.112)",          type:"Religieux",  tag:"tr_", cout:50,   duree:0.75,ent:5,   rev:0,   bonus:"+5% Vénération culte associé"},
+  {nom:"Pierre dressée / Statue (p.112)",type:"Religieux",tag:"tr_",cout:35,   duree:1,   ent:0,   rev:0,   bonus:"+1% Réputation · +5% récolte (déesse grain)"},
+  {nom:"Temple (p.112)",              type:"Religieux",  tag:"tr_", cout:3000, duree:9,   ent:300, rev:0,   bonus:"+10% Vénération. Prêtre plein-temps. Don 5+ carucates. (= 150r)"},
+  {nom:"Verger (p.112)",              type:"Amélioration",tag:"tam",cout:200,  duree:0.5, ent:20,  rev:50,  bonus:"Fruits : pommes, figues, olives… (= 10r)"},
+  {nom:"Vigne (1 carucate, p.112)",   type:"Amélioration",tag:"tam",cout:30,   duree:2,   ent:6,   rev:40,  bonus:"Coteaux exposés sud, plusieurs ans maturité"},
+];
+
+// Fortifications — valeurs officielles (Règles Domaine p.110)
+const FORTIFICATIONS = [
+  {nom:"Fossé (100m)",                cout:10,   duree:0.25, ent:1,   note:"Quelques mètres de profondeur, parois raides"},
+  {nom:"Rangée de pieux (10m)",       cout:5,    duree:0.1,  ent:10,  note:"Anti-cavalerie. Rondins hauteur d'homme, pointus"},
+  {nom:"Rempart en terre",            cout:20,   duree:0.5,  ent:20,  note:"Recyclage terre du fossé. Position surélevée"},
+  {nom:"Palissade (100m)",            cout:30,   duree:0.5,  ent:30,  note:"Rondins accolés, 3m+ de haut. Sur rempart/fossé"},
+  {nom:"Chemin de ronde (talus terre)",cout:15,  duree:0.25, ent:10,  note:"Crête de terre vers corps de garde"},
+  {nom:"Chemin de ronde (talus pierre)",cout:30, duree:0.75, ent:40,  note:"Pierres empilées/briques, plus durable"},
+  {nom:"Plateforme en bois",          cout:5,    duree:0.1,  ent:20,  note:"Tour sans balustrade. Tir et surveillance"},
+  {nom:"Corps de garde (bois)",       cout:200,  duree:1.5,  ent:10,  note:"Structure autour des portes. (= 10r)"},
+  {nom:"Corps de garde (pierre)",     cout:400,  duree:3,    ent:20,  note:"Surveille entrée + murs adjacents. (= 20r)"},
+  {nom:"Tour en bois",                cout:400,  duree:0.5,  ent:30,  note:"3 étages fermés, couverture défenseurs. (= 20r)"},
+  {nom:"Tour en pierre",              cout:1000, duree:1.5,  ent:50,  note:"Tour fortifiée permanente. (= 50r)"},
+  {nom:"Donjon en bois",              cout:4000, duree:9,    ent:400, note:"Point de défense central. Refuge si murailles tombent. (= 200r+)"},
+  {nom:"Donjon en pierre",            cout:8000, duree:12,   ent:400, note:"Forteresse noble. Résidence en temps de paix. (= 400r+)"},
+  {nom:"Muraille en pierre (100m)",   cout:800,  duree:1.5,  ent:100, note:"Pierre sèche ou mortier. Difficile à abattre. (= 40r+)"},
+];
+
+const AGRICULTURES = [
+  {nom:"Carucate (culture directe)",  cout:500,  duree:1,ent:10,rev:64,  note:"Surplus brut 80L →64L net (−20% dîme). Cultivateur lui-même."},
+  {nom:"Carucate (fermier tenant)",   cout:500,  duree:1,ent:5, rev:32,  note:"Seigneur reçoit moitié = 32L/an. Tenant garde 32L. (p.405)"},
+  {nom:"Pré / Pacage (1 ha)",         cout:10,   duree:1,ent:4, rev:12,  note:"Fourrage pour troupeaux"},
+  {nom:"Jardin potager",              cout:12,   duree:1,ent:6, rev:20,  note:"Légumes, herbes. Complément alimentaire."},
+  {nom:"Troupeau bovin (20 têtes = 1 carucate)",cout:400,duree:0,ent:30,rev:64, note:"Vache 20L, taureau 30L (p.410). = 1 hide."},
+  {nom:"Troupeau ovin (100 têtes = 1 carucate)",cout:300,duree:0,ent:20,rev:64, note:"Mouton 3L/tête (p.410). = 1 hide."},
+  {nom:"Troupeau caprin (50 têtes)",  cout:150,  duree:0,ent:15,rev:40,  note:"Lait, viande, fromage. Chèvres déconseillées (p.410)."},
+  {nom:"Élevage porcin (10 porcs)",   cout:20,   duree:0,ent:12,rev:40,  note:"Porc yearling 2L (p.410). Viande, saindoux."},
+  {nom:"Volailles (50 unités)",       cout:5,    duree:0,ent:6, rev:25,  note:"Poulet 1C, canard 1C, oie 3C (p.410)."},
+  {nom:"Ruches (10 ruches)",          cout:30,   duree:1,ent:8, rev:28,  note:"Miel, cire. Usage cérémoniel + commercial."},
+  {nom:"Chevaux de trait (5)",        cout:200,  duree:0,ent:35,rev:20,  note:"Cheval 40L pièce (p.410). Travail, transport."},
+  {nom:"Bisons (Prax, 10 têtes)",     cout:200,  duree:0,ent:22,rev:50,  note:"Bison viande 20L, war-beast 90L (p.410). Prax."},
+  {nom:"Hauts Lamas (5)",             cout:275,  duree:0,ent:30,rev:55,  note:"Haut Lama cavalerie 55L (p.410). Caravane/désert."},
+  {nom:"Zebras (Prax, 5)",            cout:350,  duree:0,ent:25,rev:45,  note:"Zèbre cavalerie 70L, war-beast 210L (p.410)."},
+];
+
+const RESSOURCES = [
+  {nom:"Carrière de pierre",   cout:500,  duree:2,ent:50, rev:80,  note:"Pierre, calcaire. (= 25r)"},
+  {nom:"Mine (cuivre/fer)",    cout:1000, duree:3,ent:100,rev:200, note:"Selon localisation. Très précieux. (= 50r)"},
+  {nom:"Mine d'argent",        cout:1200, duree:4,ent:120,rev:300, note:"Attire convoitises. Symbole Lunar."},
+  {nom:"Verger (1 ha)",        cout:200,  duree:3,ent:20, rev:55,  note:"Pommes, poires, figues, olives. (= 10r)"},
+  {nom:"Vigne (1 ha)",         cout:140,  duree:3,ent:18, rev:75,  note:"Vin local 1C, Clearwine 4C (p.413)"},
+  {nom:"Barrage à poissons",   cout:75,   duree:1,ent:8,  rev:45,  note:"Rivière/côte. Saumon, anguilles."},
+  {nom:"Marais salant",        cout:190,  duree:2,ent:18, rev:85,  note:"Sel 1L/30ml (p.412). Très précieux."},
+  {nom:"Magasin / Boutique",   cout:200,  duree:1,ent:20, rev:90,  note:"Requiert marchand compétent. (= 10r)"},
+  {nom:"Étang piscicole",      cout:110,  duree:2,ent:14, rev:48,  note:"Élevage piscicole."},
+  {nom:"Forêt gérée (5 ha)",   cout:0,    duree:5,ent:8,  rev:38,  note:"Bois d'œuvre, gibier, produits forestiers."},
+  {nom:"Taillis",              cout:10,   duree:3,ent:2,  rev:20,  note:"Hampes lances/arcs. Plusieurs ans avant coupe."},
+];
+
+// Événements locaux
+const EVENTS = [
+  {min:-999,max:1,txt:"✦ Événement céleste : étoile, comète ou prodige. Présage divin.",effet:"+15 Augures",css:"event-good"},
+  {min:2,max:5,txt:"Animal sacré aperçu. Organisez une chasse pour meilleurs présages.",effet:"+10 Augures (ou +20 chasse réussie / −10 échouée)",css:"event-good"},
+  {min:6,max:10,txt:"Tout est tranquille. Le domaine jouit d'une paix bienvenue.",effet:"+5 Augures",css:"event-good"},
+  {min:11,max:50,txt:"Tout est calme. Aucun événement notable.",effet:"Aucun",css:""},
+  {min:51,max:55,txt:"🔥 Incendie ! Un feu se déclare sur le domaine.",effet:"−10 récolte l'an prochain si non maîtrisé",css:"event-bad"},
+  {min:56,max:60,txt:"🐛 Vermine : invasion d'insectes (sauterelles, mouches sanglantes…) ou rongeurs.",effet:"−10 récolte l'an prochain si non traité (termites : dommages bâtiments)",css:"event-bad"},
+  {min:61,max:70,txt:"⚔ Raid mineur. Rivaux ou étrangers. 10% chance trolls ou Monteurs de sangliers.",effet:"−10 récolte l'an prochain si non stoppé",css:"event-bad"},
+  {min:71,max:75,txt:"🌋 Séisme ! La déesse de la Terre locale semble mécontente.",effet:"−10 Augures (quête héroïque / intervention divine pour contrer)",css:"event-bad"},
+  {min:76,max:80,txt:"☠ Maladie (esprits de Mallia). 1D6 : 1-4 = champs, 5-6 = bétail.",effet:"−10 récolte/saison, cumulatif si non traité",css:"event-bad"},
+  {min:81,max:85,txt:"⚔⚔ Raid majeur ! Rivaux ou étrangers. 10% chance trolls.",effet:"−20 récolte l'an prochain si non stoppé",css:"event-bad"},
+  {min:86,max:90,txt:"☀ Sécheresse. La pluie se fait rare.",effet:"−15 récolte l'an prochain (quête héroïque / intervention divine)",css:"event-bad"},
+  {min:91,max:95,txt:"⚔⚔⚔ Invasion ! Les envahisseurs cherchent à s'installer définitivement.",effet:"−20 récolte l'an prochain si non stoppée",css:"event-bad"},
+  {min:96,max:99,txt:"🌊 Inondation ! Le domaine est submergé.",effet:"−20 récolte l'an prochain (quête héroïque / intervention divine)",css:"event-bad"},
+  {min:100,max:9999,txt:"💀 INCURSION DU CHAOS ! Broos, hommes-scorpions ou autres horreurs.",effet:"−40 récolte l'an prochain si non stoppée",css:"event-bad"},
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let S = {domain:{},population:[],structures:[],fortifications:[],habitations:[],agricultures:[],ressources:[],_id:1};
+const nid = () => S._id++;
+let strFilter = 'all';
+
+window.onload = () => {
+  loadTheme(); loadState(); buildRefs(); fillSelects(); renderAll();
+};
+
+function loadState(){
+  try{
+    const s=localStorage.getItem('rq-v4');
+    if(s){
+      const p=JSON.parse(s); S={...S,...p};
+      Object.entries(S.domain||{}).forEach(([k,v])=>{const e=g('d-'+k);if(e)e.value=v;});
+      ['t-qualite','t-elements','t-modif'].forEach(id=>{const e=g(id);if(e&&S.terrain)e.value=S.terrain[id.replace('t-','')]||'';});
+      const ta=g('ts-actions');if(ta&&S.sacre)ta.value=S.sacre.actions||'';
+    }
+  }catch(e){}
+}
+
+function autosave(){
+  S.domain={nom:gv('d-nom'),dirigeant:gv('d-dirigeant'),region:gv('d-region'),culture:gv('d-culture'),hides:gv('d-hides'),saison:gv('d-saison'),annee:gv('d-annee'),tresor:gv('d-tresor'),senechal:gv('d-senechal'),rep:gv('d-rep'),notes:gv('d-notes')};
+  S.terrain={qualite:gv('t-qualite'),elements:gv('t-elements'),modif:gv('t-modif')};
+  S.sacre={actions:gv('ts-actions'),aug:gv('ts-aug-val'),rec:gv('ts-rec-val'),occ:gv('ts-occ-val')};
+  localStorage.setItem('rq-v4',JSON.stringify(S));
+}
+
+function saveAll(){ autosave(); toast('✓ Sauvegardé avec succès !'); }
+
+function doExport(){
+  autosave();
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=(S.domain.nom||'domaine')+'-rq.json'; a.click(); URL.revokeObjectURL(url);
+  toast('📤 Export effectué');
+}
+
+function doImport(ev){
+  const f=ev.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{try{S=JSON.parse(e.target.result);Object.entries(S.domain||{}).forEach(([k,v])=>{const el=g('d-'+k);if(el)el.value=v;});renderAll();autosave();toast('📥 Import réussi');}catch{alert('Fichier JSON invalide');}};
+  r.readAsText(f); ev.target.value='';
+}
+
+function resetAll(){
+  if(!confirm('Réinitialiser TOUTES les données ?'))return;
+  S={domain:{},population:[],structures:[],fortifications:[],habitations:[],agricultures:[],ressources:[],_id:1};
+  localStorage.removeItem('rq-v4');
+  ['nom','dirigeant','region','hides','annee','tresor','senechal','rep','notes'].forEach(k=>{const e=g('d-'+k);if(e)e.value='';});
+  renderAll(); toast('🗑 Réinitialisé');
+}
+
+// ═══════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════
+function showTab(el,id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  g('sec-'+id).classList.add('active'); el.classList.add('active');
+  if(id==='synthese') buildSynthese();
+  if(id==='sacre') updateBonuses();
+}
+
+function openModal(id){ g(id).classList.add('open'); }
+function closeModal(id){ g(id).classList.remove('open'); }
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');});
+
+// ═══════════════════════════════════════════════
+// SELECTS
+// ═══════════════════════════════════════════════
+function fillSelects(){
+  const add=(id,arr,fn)=>{const s=g(id);if(!s)return;arr.forEach(x=>{const o=document.createElement('option');o.value=x.nom;o.textContent=fn?fn(x):x.nom;s.appendChild(o);});};
+  add('p-met',METIERS);
+  add('s-typ',STRUCTURES,x=>`${x.nom} (${x.type})`);
+  add('f2-typ',FORTIFICATIONS);
+  add('h-typ',HABITATIONS);
+  add('a-typ',AGRICULTURES);
+  add('r-typ',RESSOURCES);
+}
+
+function afp(){const m=METIERS.find(x=>x.nom===gv('p-met'));const s=gv('p-std');if(m&&m[s]){sv('p-c',m[s].c);sv('p-r',m[s].r);}}
+function afs(){const x=STRUCTURES.find(x=>x.nom===gv('s-typ'));if(x){sv('s-c',x.cout);sv('s-d',x.duree);sv('s-e',x.ent);sv('s-r',x.rev);}}
+function aff2(){const x=FORTIFICATIONS.find(x=>x.nom===gv('f2-typ'));if(x){sv('f2-c',x.cout);sv('f2-d',x.duree);sv('f2-e',x.ent);}}
+function afh(){const x=HABITATIONS.find(x=>x.nom===gv('h-typ'));if(x){sv('h-c',x.cout);sv('h-d',x.duree);sv('h-e',x.ent);}}
+function afa(){const x=AGRICULTURES.find(x=>x.nom===gv('a-typ'));if(x){sv('a-c',x.cout);sv('a-d',x.duree);sv('a-e',x.ent);sv('a-r',x.rev);}}
+function afr(){const x=RESSOURCES.find(x=>x.nom===gv('r-typ'));if(x){sv('r-c',x.cout);sv('r-d',x.duree);sv('r-e',x.ent);sv('r-r',x.rev);}}
+
+function clearForm(t){
+  const ids={p:['p-eid','p-nom','p-met','p-c','p-r','p-n'],s:['s-eid','s-typ','s-c','s-d','s-e','s-r','s-n'],f2:['f2-eid','f2-typ','f2-c','f2-d','f2-e','f2-n'],h:['h-eid','h-typ','h-occ','h-c','h-d','h-e','h-n'],a:['a-eid','a-typ','a-q','a-c','a-d','a-e','a-r','a-n'],r:['r-eid','r-typ','r-det','r-c','r-d','r-e','r-r','r-n']};
+  (ids[t]||[]).forEach(id=>sv(id,''));
+  if(t==='p') g('p-std').value='libre';
+  if(t==='s') g('s-et').value='En projet';
+  if(t==='f2') g('f2-et').value='En projet';
+  if(t==='h') g('h-et').value='En projet';
+  if(t==='r') g('r-et').value='En projet';
+}
+
+// ═══════════════════════════════════════════════
+// CRUD HELPERS
+// ═══════════════════════════════════════════════
+function ups(arr,e){const i=arr.findIndex(x=>x.id===e.id);i>=0?arr[i]=e:arr.push(e);}
+function mkRow(cells){const tr=document.createElement('tr');tr.innerHTML=cells;return tr;}
+function fmtL(v,suf='/an'){return v?`<span class="cn">${v} L${suf}</span>`:'<span style="color:#444">—</span>';}
+function fmtRev(v,suf='/an'){return v?`<span class="cp">${v} L${suf}</span>`:'<span style="color:#444">—</span>';}
+function fmtBilan(b){return `<span style="font-weight:700;color:${b>=0?'#6abf7b':'#e06060'}">${b>=0?'+':''}${b} L</span>`;}
+
+// POPULATION
+function savePop(){
+  const id=gv('p-eid');
+  const e={id:id?+id:nid(),nom:gv('p-nom')||'Inconnu',metier:gv('p-met')||'Habitant',std:gv('p-std'),cout:+gv('p-c')||0,rev:+gv('p-r')||0,notes:gv('p-n')};
+  ups(S.population,e); closeModal('mp'); renderPop(); autosave();
+}
+function editPop(id){const p=S.population.find(x=>x.id===id);if(!p)return;sv('p-eid',p.id);sv('p-nom',p.nom);g('p-met').value=p.metier;g('p-std').value=p.std;sv('p-c',p.cout);sv('p-r',p.rev);sv('p-n',p.notes||'');openModal('mp');}
+function delPop(id){if(!confirm('Supprimer ?'))return;S.population=S.population.filter(x=>x.id!==id);renderPop();autosave();}
+
+function renderPop(){
+  const tb=g('tb-pop'); tb.innerHTML=''; let tc=0,tr_=0; const stats={};
+  S.population.forEach((p,i)=>{
+    tc+=p.cout; tr_+=p.rev; stats[p.metier]=(stats[p.metier]||0)+1;
+    const b=p.rev-p.cout;
+    tb.appendChild(mkRow(`<td style="color:#888;font-size:.75rem">${i+1}</td><td><strong>${x(p.nom)}</strong></td><td>${x(p.metier)}</td><td><span class="sb ${STD_CSS[p.std]}">${STD_LBL[p.std]}</span></td><td class="cn">${p.cout} L</td><td class="cp">${p.rev} L</td><td>${fmtBilan(b)}</td><td style="font-style:italic;font-size:.8rem;color:#666">${x(p.notes||'')}</td><td><button class="btn-sm btn-sm-e" onclick="editPop(${p.id})">✏</button> <button class="btn-sm btn-sm-d" onclick="delPop(${p.id})">✕</button></td>`));
+  });
+  const b=tr_-tc; g('tp-c').textContent=tc+' L'; g('tp-r').textContent=tr_+' L';
+  const be=g('tp-b'); be.textContent=(b>=0?'+':'')+b+' L'; be.style.color=b>=0?'#6abf7b':'#e06060';
+  g('pop-stats').innerHTML=Object.entries(stats).map(([m,n])=>`<div style="background:rgba(201,146,42,.1);border:1px solid var(--parch-deep);border-radius:4px;padding:6px 10px"><div style="font-weight:700;font-size:1rem">${n}</div><div style="font-size:.68rem;color:#888">${x(m)}</div></div>`).join('');
+}
+
+// STRUCTURES
+function filterStr(btn,type){strFilter=type;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderStr();}
+
+function saveStr(){
+  const id=gv('s-eid'); const ref=STRUCTURES.find(x=>x.nom===gv('s-typ'));
+  const e={id:id?+id:nid(),nom:gv('s-typ'),type:ref?ref.type:'—',tag:ref?ref.tag:'tc',bonus:ref?ref.bonus:'',cout:+gv('s-c')||0,duree:+gv('s-d')||0,ent:+gv('s-e')||0,rev:+gv('s-r')||0,etat:gv('s-et')||'En projet',notes:gv('s-n')};
+  ups(S.structures,e); closeModal('ms'); renderStr(); autosave();
+}
+function editStr(id){const s=S.structures.find(x=>x.id===id);if(!s)return;sv('s-eid',s.id);g('s-typ').value=s.nom;sv('s-c',s.cout);sv('s-d',s.duree);sv('s-e',s.ent);sv('s-r',s.rev);g('s-et').value=s.etat;sv('s-n',s.notes||'');openModal('ms');}
+function delStr(id){if(!confirm('Supprimer ?'))return;S.structures=S.structures.filter(x=>x.id!==id);renderStr();autosave();}
+
+function renderStr(){
+  const tb=g('tb-str'); tb.innerHTML=''; let tc=0,te=0,tr_=0;
+  let rows=S.structures;
+  if(strFilter!=='all') rows=rows.filter(s=>s.type===strFilter);
+  rows.forEach((s,i)=>{
+    tc+=s.cout; te+=s.ent; tr_+=s.rev;
+    const b=s.rev-s.ent;
+    tb.appendChild(mkRow(`<td style="color:#888;font-size:.75rem">${i+1}</td><td><strong>${x(s.nom)}</strong></td><td><span class="tag ${s.tag}">${s.type}</span></td><td class="cn">${s.cout} L</td><td>${s.duree} s.</td><td>${fmtL(s.ent)}</td><td>${fmtRev(s.rev)}</td><td>${fmtBilan(b)}</td><td style="font-size:.75rem;color:#9a7aaa">${x(s.bonus||'')}</td><td><em style="font-size:.8rem">${x(s.etat)}</em></td><td style="font-style:italic;font-size:.77rem;color:#666">${x(s.notes||'')}</td><td><button class="btn-sm btn-sm-e" onclick="editStr(${s.id})">✏</button> <button class="btn-sm btn-sm-d" onclick="delStr(${s.id})">✕</button></td>`));
+  });
+  const b=tr_-te;
+  g('ts-c').textContent=tc+' L'; g('ts-e').textContent=te+' L/an'; g('ts-r').textContent=tr_+' L/an';
+  const be=g('ts-b'); be.textContent=(b>=0?'+':'')+b; be.style.color=b>=0?'#6abf7b':'#e06060';
+}
+
+// FORTIFICATIONS
+function saveFort(){
+  const id=gv('f2-eid'); const ref=FORTIFICATIONS.find(x=>x.nom===gv('f2-typ'));
+  const e={id:id?+id:nid(),nom:gv('f2-typ'),cout:+gv('f2-c')||0,duree:+gv('f2-d')||0,ent:+gv('f2-e')||0,etat:gv('f2-et')||'En projet',notes:gv('f2-n')};
+  ups(S.fortifications,e); closeModal('mf2'); renderFort(); autosave();
+}
+function editFort(id){const f=S.fortifications.find(x=>x.id===id);if(!f)return;sv('f2-eid',f.id);g('f2-typ').value=f.nom;sv('f2-c',f.cout);sv('f2-d',f.duree);sv('f2-e',f.ent);g('f2-et').value=f.etat;sv('f2-n',f.notes||'');openModal('mf2');}
+function delFort(id){if(!confirm('Supprimer ?'))return;S.fortifications=S.fortifications.filter(x=>x.id!==id);renderFort();autosave();}
+
+function renderFort(){
+  const tb=g('tb-fort'); tb.innerHTML=''; let tc=0,te=0;
+  S.fortifications.forEach((f,i)=>{
+    tc+=f.cout; te+=f.ent;
+    tb.appendChild(mkRow(`<td style="color:#888;font-size:.75rem">${i+1}</td><td><strong>${x(f.nom)}</strong></td><td class="cn">${f.cout} L</td><td>${f.duree} s.</td><td>${fmtL(f.ent)}</td><td><em style="font-size:.8rem">${x(f.etat)}</em></td><td style="font-style:italic;font-size:.77rem;color:#666">${x(f.notes||'')}</td><td><button class="btn-sm btn-sm-e" onclick="editFort(${f.id})">✏</button> <button class="btn-sm btn-sm-d" onclick="delFort(${f.id})">✕</button></td>`));
+  });
+  g('tf-c').textContent=tc+' L'; g('tf-e').textContent=te+' L/an';
+}
+
+// HABITATIONS
+function saveHab(){
+  const id=gv('h-eid');
+  const e={id:id?+id:nid(),nom:gv('h-typ'),occ:gv('h-occ'),cout:+gv('h-c')||0,duree:+gv('h-d')||0,ent:+gv('h-e')||0,etat:gv('h-et')||'En projet',notes:gv('h-n')};
+  ups(S.habitations,e); closeModal('mh'); renderHab(); autosave();
+}
+function editHab(id){const h=S.habitations.find(x=>x.id===id);if(!h)return;sv('h-eid',h.id);g('h-typ').value=h.nom;sv('h-occ',h.occ||'');sv('h-c',h.cout);sv('h-d',h.duree);sv('h-e',h.ent);g('h-et').value=h.etat;sv('h-n',h.notes||'');openModal('mh');}
+function delHab(id){if(!confirm('Supprimer ?'))return;S.habitations=S.habitations.filter(x=>x.id!==id);renderHab();autosave();}
+
+function renderHab(){
+  const tb=g('tb-hab'); tb.innerHTML=''; let tc=0,te=0;
+  S.habitations.forEach((h,i)=>{
+    tc+=h.cout; te+=h.ent;
+    const coutStr=h.cout>=1000?`${h.cout} L <span style="color:#666;font-size:.75rem">(≈${(h.cout/20).toFixed(0)}r)</span>`:h.cout+' L';
+    tb.appendChild(mkRow(`<td style="color:#888;font-size:.75rem">${i+1}</td><td><strong>${x(h.nom)}</strong></td><td style="font-style:italic">${x(h.occ||'—')}</td><td class="cn">${coutStr}</td><td>${h.duree} s.</td><td>${fmtL(h.ent)}</td><td><em style="font-size:.8rem">${x(h.etat)}</em></td><td style="font-style:italic;font-size:.77rem;color:#666">${x(h.notes||'')}</td><td><button class="btn-sm btn-sm-e" onclick="editHab(${h.id})">✏</button> <button class="btn-sm btn-sm-d" onclick="delHab(${h.id})">✕</button></td>`));
+  });
+  const tcStr=tc>=1000?`${tc} L (≈${(tc/20).toFixed(0)}r)`:tc+' L';
+  g('th-c').textContent=tcStr; g('th-e').textContent=te+' L/an';
+}
+
+// AGRICULTURE
+function saveAgr(){
+  const id=gv('a-eid');
+  const e={id:id?+id:nid(),nom:gv('a-typ'),qte:gv('a-q'),cout:+gv('a-c')||0,duree:+gv('a-d')||0,ent:+gv('a-e')||0,rev:+gv('a-r')||0,notes:gv('a-n')};
+  ups(S.agricultures,e); closeModal('ma'); renderAgr(); autosave();
+}
+function editAgr(id){const a=S.agricultures.find(x=>x.id===id);if(!a)return;sv('a-eid',a.id);g('a-typ').value=a.nom;sv('a-q',a.qte||'');sv('a-c',a.cout);sv('a-d',a.duree);sv('a-e',a.ent);sv('a-r',a.rev);sv('a-n',a.notes||'');openModal('ma');}
+function delAgr(id){if(!confirm('Supprimer ?'))return;S.agricultures=S.agricultures.filter(x=>x.id!==id);renderAgr();autosave();}
+
+function renderAgr(){
+  const tb=g('tb-agr'); tb.innerHTML=''; let tc=0,te=0,tr_=0;
+  S.agricultures.forEach((a,i)=>{
+    tc+=a.cout; te+=a.ent; tr_+=a.rev;
+    const b=a.rev-a.ent;
+    tb.appendChild(mkRow(`<td style="color:#888;font-size:.75rem">${i+1}</td><td><strong>${x(a.nom)}</strong></td><td style="font-style:italic">${x(a.qte||'—')}</td><td class="cn">${a.cout} L</td><td>${a.duree} s.</td><td>${fmtL(a.ent)}</td><td>${fmtRev(a.rev)}</td><td>${fmtBilan(b)}</td><td style="font-style:italic;font-size:.77rem;color:#666">${x(a.notes||'')}</td><td><button class="btn-sm btn-sm-e" onclick="editAgr(${a.id})">✏</button> <button class="btn-sm btn-sm-d" onclick="delAgr(${a.id})">✕</button></td>`));
+  });
+  const b=tr_-te; g('ta-c').textContent=tc+' L'; g('ta-e').textContent=te+' L/an'; g('ta-r').textContent=tr_+' L/an';
+  const be=g('ta-b'); be.textContent=(b>=0?'+':'')+b; be.style.color=b>=0?'#6abf7b':'#e06060';
+}
+
+// RESSOURCES
+function saveRes(){
+  const id=gv('r-eid');
+  const e={id:id?+id:nid(),nom:gv('r-typ'),detail:gv('r-det'),cout:+gv('r-c')||0,duree:+gv('r-d')||0,ent:+gv('r-e')||0,rev:+gv('r-r')||0,etat:gv('r-et')||'En projet',notes:gv('r-n')};
+  ups(S.ressources,e); closeModal('mr'); renderRes(); autosave();
+}
+function editRes(id){const r=S.ressources.find(x=>x.id===id);if(!r)return;sv('r-eid',r.id);g('r-typ').value=r.nom;sv('r-det',r.detail||'');sv('r-c',r.cout);sv('r-d',r.duree);sv('r-e',r.ent);sv('r-r',r.rev);g('r-et').value=r.etat;sv('r-n',r.notes||'');openModal('mr');}
+function delRes(id){if(!confirm('Supprimer ?'))return;S.ressources=S.ressources.filter(x=>x.id!==id);renderRes();autosave();}
+
+function renderRes(){
+  const tb=g('tb-res'); tb.innerHTML=''; let tc=0,te=0,tr_=0;
+  S.ressources.forEach((r,i)=>{
+    tc+=r.cout; te+=r.ent; tr_+=r.rev;
+    const b=r.rev-r.ent;
+    tb.appendChild(mkRow(`<td style="color:#888;font-size:.75rem">${i+1}</td><td><strong>${x(r.nom)}</strong></td><td style="font-style:italic">${x(r.detail||'—')}</td><td class="cn">${r.cout} L</td><td>${r.duree} s.</td><td>${fmtL(r.ent)}</td><td>${fmtRev(r.rev)}</td><td>${fmtBilan(b)}</td><td><em style="font-size:.8rem">${x(r.etat)}</em></td><td style="font-style:italic;font-size:.77rem;color:#666">${x(r.notes||'')}</td><td><button class="btn-sm btn-sm-e" onclick="editRes(${r.id})">✏</button> <button class="btn-sm btn-sm-d" onclick="delRes(${r.id})">✕</button></td>`));
+  });
+  const b=tr_-te; g('tr-c').textContent=tc+' L'; g('tr-e').textContent=te+' L/an'; g('tr-r').textContent=tr_+' L/an';
+  const be=g('tr-b'); be.textContent=(b>=0?'+':'')+b; be.style.color=b>=0?'#6abf7b':'#e06060';
+}
+
+// ═══════════════════════════════════════════════
+// TERRAIN — DÉS
+// ═══════════════════════════════════════════════
+const QUAL_TABLE=[
+  {min:1,max:10,label:'Morne',cls:'q-morne',mod:'−50%',desc:"Sol pauvre, trop rocailleux, infesté. Peu de récolte."},
+  {min:11,max:30,label:'Clairsemé',cls:'q-clairseme',mod:'−20%',desc:"Presque assez d'eau/soleil. Sol épuisé ou médiocre."},
+  {min:31,max:70,label:'Moyen',cls:'q-moyen',mod:'—',desc:"Respectable. Produit normalement si bien entretenu."},
+  {min:71,max:90,label:'Abondant',cls:'q-abondant',mod:'+10%',desc:"Fertile, fourmille de vie. Presque tout peut y pousser."},
+  {min:91,max:100,label:'Luxuriant',cls:'q-luxuriant',mod:'+25%',desc:"Excellent sol, auto-suffisant. Nourriture au meilleur goût."},
+];
+const ELEM_TABLE=[
+  {min:1,max:2,label:'Site chaotique',prix:'2r / 40L',effet:'Quasi nul',desc:'Chaos souille le terrain. 10%/saison incursion Chaos.'},
+  {min:3,max:6,label:'Marais',prix:'12r / 240L',effet:'−20 L/an',desc:'Marécage ou tourbière. Seule magie de la Terre peut l\'éliminer.'},
+  {min:7,max:12,label:'Forêt',prix:'15r / 300L',effet:'50% revenu',desc:'Forêt couvrant le terrain. 50% de chances d\'habitants sylvestres.'},
+  {min:13,max:20,label:'Escarpement rocheux',prix:'15r / 300L',effet:'−15 L/an',desc:'Réduit surface. Possible grotte. 50% de chances d\'habitants.'},
+  {min:21,max:30,label:'Ravin',prix:'18r / 360L',effet:'−10 L/an',desc:'Large ravin. 75% chance de cavernes. Pont annule pénalité.'},
+  {min:31,max:42,label:'Champs vallonnés',prix:'22r / 440L',effet:'−5 L/an',desc:'Adapté troupeaux. Pénalité si cultivé sans route.'},
+  {min:43,max:58,label:'Terres arables',prix:'25r / 500L',effet:'Base 40L/an',desc:'Pentes douces ou plaines. Parfait pour cultures/élevage.'},
+  {min:59,max:70,label:'Plaines fertiles',prix:'28r / 560L',effet:'+5 L/an',desc:'Terres particulièrement fertiles. +5L/an si cultivées.'},
+  {min:71,max:80,label:'Étang',prix:'32r / 640L',effet:'+10 L/an',desc:'Étang central. Accès eau facile. +10L/an.'},
+  {min:81,max:88,label:'Ruisseau',prix:'35r / 700L',effet:'+15 L/an',desc:'Eau fraîche en abondance pour irrigation. +15L/an.'},
+  {min:89,max:94,label:'Rivière',prix:'25r / 500L',effet:'+20 L/an',desc:'Eau + voie commerciale. 25% chance infranchissable (besoin pont).'},
+  {min:95,max:98,label:'Lac',prix:'35r / 700L',effet:'+10+10 L/an',desc:'+10L base +10L si familles pêcheurs autorisées.'},
+  {min:99,max:100,label:'Lieu Sacré',prix:'40r / 800L',effet:'+5-10% Vénération',desc:'Sacré pour un culte local. 50% chance sanctuaire déjà érigé.'},
+];
+const RES_TABLE=[
+  {min:1,max:15,label:'Aucun — bâtiment en bon état',css:'event-good'},
+  {min:16,max:50,label:'Aucun — bâtiment en mauvais état',css:''},
+  {min:51,max:75,label:'Un ou plusieurs métayers',css:''},
+  {min:76,max:90,label:'1D3 familles auto-suffisantes (sans autorisation)',css:''},
+  {min:91,max:95,label:'Gang 3+1D6 bandits/criminels/fugitifs',css:'event-bad'},
+  {min:96,max:100,label:'Abandonné mais habité par 1+ monstre (MJ)',css:'event-bad'},
+];
+
+function rollQualite(){
+  const d=Math.floor(Math.random()*100)+1;
+  const q=QUAL_TABLE.find(r=>d>=r.min&&d<=r.max);
+  const dr=g('dr-qual'); const dl=g('dl-qual');
+  dr.textContent=`${d} — `; dr.innerHTML+=`<span class="${q.cls}">${q.label}</span>`;
+  dl.innerHTML=`Modificateur : <strong>${q.mod}</strong> &nbsp;|&nbsp; ${q.desc}`;
+}
+
+function rollElement(){
+  const d=Math.floor(Math.random()*100)+1;
+  const e=ELEM_TABLE.find(r=>d>=r.min&&d<=r.max);
+  const dr=g('dr-elem'); const dl=g('dl-elem');
+  dr.textContent=`${d} — ${e.label}`;
+  dl.innerHTML=`Prix : <strong>${e.prix}</strong> &nbsp;|&nbsp; Effet : <strong>${e.effet}</strong><br><em>${e.desc}</em>`;
+}
+
+function rollResidents(){
+  const d=Math.floor(Math.random()*100)+1;
+  const r=RES_TABLE.find(t=>d>=t.min&&d<=t.max);
+  const dr=g('dr-res'); const dl=g('dl-res');
+  dr.textContent=`${d} — ${r.label}`;
+  dl.textContent='Résultat du jet pour les résidents existants.';
+}
+
+// ═══════════════════════════════════════════════
+// TEMPS SACRÉ — DÉS + ÉVÉNEMENTS
+// ═══════════════════════════════════════════════
+function doRoll(type){
+  const map={aug:{val:'ts-aug-val',dr:'dr-aug',dl:'dl-aug'},rec:{val:'ts-rec-val',dr:'dr-rec',dl:'dl-rec'},occ:{val:'ts-occ-val',dr:'dr-occ',dl:'dl-occ'}};
+  const m=map[type]; const skill=+gv(m.val)||0;
+  const roll=Math.floor(Math.random()*100)+1;
+  const dr=g(m.dr); const dl=g(m.dl);
+  dr.textContent=roll;
+  let result='',color='';
+  if(roll===1){result='✦ RÉUSSITE CRITIQUE !';color='#FFD700';}
+  else if(roll<=Math.floor(skill/5)){result='Réussite spéciale';color='#40e080';}
+  else if(roll<=skill){result='Réussite normale';color='#6abf7b';}
+  else if(roll>95||roll===100){result='💀 Échec critique !';color='#e06060';}
+  else{result='Échec';color='#e06060';}
+  dl.innerHTML=`<span style="color:${color};font-weight:700">${result}</span> &nbsp;(compétence ${skill}%, jet ${roll})`;
+}
+
+function rollEvent(){
+  const mod=+gv('ev-mod')||0;
+  const base=Math.floor(Math.random()*100)+1;
+  const total=base+mod;
+  const ev=EVENTS.find(e=>total>=e.min&&total<=e.max)||EVENTS[EVENTS.length-1];
+  const el=g('ev-result');
+  el.className='event-result '+ev.css;
+  el.innerHTML=`<strong style="font-size:.95rem">Jet : ${base} ${mod>=0?'+':''}${mod} = ${total}</strong><br><br>${ev.txt}<br><br><em style="color:#aaa">Effet : ${ev.effet}</em>`;
+}
+
+function updateBonuses(){
+  // Calculate bonuses from improvements
+  const hasEnt=S.structures.some(s=>s.nom.includes('Entrepôt')&&s.etat==='Opérationnel');
+  const hasIrr=S.structures.some(s=>s.nom.includes('irrigation')&&s.etat==='Opérationnel');
+  const hasSanc=S.structures.some(s=>s.nom.includes('Sanctuaire')&&s.etat==='Opérationnel');
+  const hasRoute=S.structures.some(s=>s.nom.includes('Route')&&s.etat==='Opérationnel');
+  const hasGrange=S.structures.some(s=>s.nom.includes('Étable')&&s.etat==='Opérationnel');
+  const hasStat=S.structures.some(s=>s.nom.includes('Statue')&&s.etat==='Opérationnel');
+  const hasCarav=S.structures.some(s=>s.nom.includes('caravansérail')&&s.etat==='Opérationnel');
+  const bonAug=[]; const bonRec=[]; const bonOcc=[];
+  if(hasSanc)bonAug.push('+5% Vénération (sanctuaire)');
+  if(hasEnt)bonRec.push('Surplus stockable (entrepôt)');
+  if(hasIrr)bonRec.push('+5 récolte (irrigation)');
+  if(hasGrange)bonRec.push('+5% revenu troupeau (grange)');
+  if(hasStat)bonRec.push('+5% récolte (statue déesse grain)');
+  if(hasRoute)bonOcc.push('+5% Intendance (route)');
+  if(hasCarav)bonOcc.push('+5-10% Intendance (caravansérail)');
+  g('ts-aug-bonus').innerHTML=bonAug.length?bonAug.join(' · '):'<em>Aucun bonus actif détecté</em>';
+  g('ts-rec-bonus').innerHTML=bonRec.length?bonRec.join(' · '):'<em>Aucun bonus actif détecté</em>';
+  g('ts-occ-bonus').innerHTML=bonOcc.length?bonOcc.join(' · '):'<em>Aucun bonus actif détecté</em>';
+}
+
+// SYNTHESE
+function buildSynthese(){
+  autosave(); const d=S.domain;
+  g('sy-hd').innerHTML=`<strong style="font-family:'Cinzel Decorative',serif;color:var(--old-gold)">${d.nom||'Domaine sans nom'}</strong> — <em>${d.dirigeant||'?'}</em> | ${d.region||'?'} | ${d.culture||'?'} | <strong>${d.hides||0} carucates</strong> | Trésorerie : <strong>${d.tresor||0} L</strong> | ${d.saison||''} ${d.annee||''}${d.senechal?` | Sénéchal : ${d.senechal}`:''}`;
+
+  const pC=S.population.reduce((s,x)=>s+x.cout,0), pR=S.population.reduce((s,x)=>s+x.rev,0);
+  const sE=S.structures.reduce((s,x)=>s+x.ent,0), sR=S.structures.reduce((s,x)=>s+x.rev,0), sCi=S.structures.reduce((s,x)=>s+x.cout,0);
+  const fE=S.fortifications.reduce((s,x)=>s+x.ent,0), fCi=S.fortifications.reduce((s,x)=>s+x.cout,0);
+  const hCi=S.habitations.reduce((s,x)=>s+x.cout,0), hE=S.habitations.reduce((s,x)=>s+x.ent,0);
+  const aE=S.agricultures.reduce((s,x)=>s+x.ent,0), aR=S.agricultures.reduce((s,x)=>s+x.rev,0), aCi=S.agricultures.reduce((s,x)=>s+x.cout,0);
+  const rE=S.ressources.reduce((s,x)=>s+x.ent,0), rR=S.ressources.reduce((s,x)=>s+x.rev,0), rCi=S.ressources.reduce((s,x)=>s+x.cout,0);
+  const terrainMod=+(S.terrain&&S.terrain.modif)||0;
+  const totRev=pR+sR+aR+rR+terrainMod;
+  const totEnt=pC+sE+fE+hE+aE+rE;
+  const bilan=totRev-totEnt;
+  const invest=sCi+fCi+hCi+aCi+rCi;
+
+  // Standard de vie
+  let niveauVie=''; const hides=+(d.hides||0);
+  const revParHide=hides>0?(totRev/hides).toFixed(0):0;
+  if(bilan>=400)niveauVie='<span class="sb sr">Roitelet potentiel</span>';
+  else if(bilan>=200)niveauVie='<span class="sb sn">Noble</span>';
+  else if(bilan>=60)niveauVie='<span class="sb sl">Libre</span>';
+  else if(bilan>=15)niveauVie='<span class="sb sp">Pauvre</span>';
+  else niveauVie='<span class="sb sd">Démunis</span>';
+
+  const bds=[
+    {l:'Population',v:S.population.length+' hab.'},{l:'Carucates',v:hides+' hides'},
+    {l:'Structures',v:S.structures.length},{l:'Fortifications',v:S.fortifications.length},
+    {l:'Habitations',v:S.habitations.length},{l:'Agriculture/Élevage',v:S.agricultures.length},
+    {l:'Revenus/An',v:totRev+' L',c:'pos'},{l:'Dépenses/An',v:totEnt+' L',c:'neg'},
+    {l:'Bilan/An',v:(bilan>=0?'+':'')+bilan+' L',c:bilan>=0?'pos':'neg'},
+    {l:'Investissements',v:invest+' L'},{l:'Trésorerie',v:(d.tresor||'?')+' L'},
+    {l:'Bilan en Roues',v:(bilan>=0?'+':'')+(bilan/20).toFixed(1)+' r',c:bilan>=0?'pos':'neg'},
+  ];
+  g('sy-bd').innerHTML=bds.map(b=>`<div class="sbadge"><div class="sv ${b.c||''}">${b.v}</div><div class="sll">${b.l}</div></div>`).join('');
+
+  const tb=g('tb-sy'); tb.innerHTML=''; const rows=[];
+  S.population.forEach(p=>{const b=p.rev-p.cout;rows.push({cat:'👥 Population',e:p.nom,d:`${p.metier} (${STD_LBL[p.std]})`,ci:0,ent:p.cout,rev:p.rev,b});});
+  S.structures.forEach(s=>{const b=s.rev-s.ent;rows.push({cat:'🏗 Structure',e:s.nom,d:`${s.type} — ${s.etat}`,ci:s.cout,ent:s.ent,rev:s.rev,b});});
+  S.fortifications.forEach(f=>{rows.push({cat:'🔰 Fortification',e:f.nom,d:f.etat||'—',ci:f.cout,ent:f.ent,rev:0,b:-f.ent});});
+  S.habitations.forEach(h=>{rows.push({cat:'🏠 Habitation',e:h.nom,d:h.occ||'—',ci:h.cout,ent:h.ent,rev:0,b:-h.ent});});
+  S.agricultures.forEach(a=>{const b=a.rev-a.ent;rows.push({cat:'🌾 Agriculture',e:a.nom,d:a.qte||'—',ci:a.cout,ent:a.ent,rev:a.rev,b});});
+  S.ressources.forEach(r=>{const b=r.rev-r.ent;rows.push({cat:'⛏ Ressource',e:r.nom,d:r.detail||r.etat||'—',ci:r.cout,ent:r.ent,rev:r.rev,b});});
+  if(terrainMod)rows.push({cat:'🗺 Terrain',e:'Modificateur terrain',d:(S.terrain&&S.terrain.elements)||'',ci:0,ent:0,rev:terrainMod,b:terrainMod});
+  rows.forEach(r=>{tb.appendChild(mkRow(`<td>${r.cat}</td><td><strong>${x(r.e)}</strong></td><td style="font-style:italic;font-size:.8rem;color:#666">${x(r.d)}</td><td class="cn">${r.ci>0?r.ci+' L':'—'}</td><td class="cn">${r.ent>0?r.ent+' L/an':'—'}</td><td class="cp">${r.rev>0?r.rev+' L/an':'—'}</td><td style="font-weight:700;color:${r.b>=0?'#6abf7b':'#e06060'}">${r.b>=0?'+':''}${r.b} L/an</td>`));});
+  g('gt-c').textContent=invest+' L'; g('gt-e').textContent=totEnt+' L/an'; g('gt-r').textContent=totRev+' L/an';
+  const be=g('gt-b'); be.textContent=(bilan>=0?'+':'')+bilan+' L/an'; be.style.color=bilan>=0?'#6abf7b':'#e06060';
+  g('sy-niveau').innerHTML=`<div class="rbox" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><strong>Niveau de vie annuel du domaine :</strong> ${niveauVie} &nbsp;|&nbsp; Revenu brut/carucate : <strong>${revParHide} L</strong> &nbsp;|&nbsp; Terr. mod : <strong>${terrainMod>=0?'+':''}${terrainMod} L</strong></div>`;
+}
+
+// ═══════════════════════════════════════════════
+// REFS — Remplissage des tableaux de référence
+// ═══════════════════════════════════════════════
+function buildRefs(){
+  // Métiers
+  const mb=g('tb-ref-m');
+  METIERS.forEach(m=>{
+    const stds=['destitue','pauvre','libre','noble','roitelet'];
+    const cells=stds.map(s=>{const d=m[s];if(!d||(d.c===0&&d.r===0))return`<td style="color:#444;text-align:center">—</td>`;return`<td style="font-size:.78rem"><span style="color:#cd5c5c">-${d.c}L</span> / <span style="color:#6abf7b">+${d.r}L</span></td>`;}).join('');
+    mb.appendChild(mkRow(`<td><strong>${x(m.nom)}</strong></td>${cells}`));
+  });
+  // Habitations
+  const hb=g('tb-ref-h');
+  HABITATIONS.forEach(h=>{
+    const prixStr=h.cout>=1000?`${h.cout} L (≈${(h.cout/20).toFixed(0)}r)`:h.cout+' L';
+    const entStr=h.ent>0?`${h.ent} L/an`:'—';
+    hb.appendChild(mkRow(`<td><strong>${h.nom}</strong></td><td>${h.cap}</td><td class="cn">${prixStr}</td><td>${h.duree} s.</td><td class="cn">${entStr}</td><td style="font-style:italic">${h.std}</td><td style="font-size:.78rem;color:#888">${h.desc}</td>`));
+  });
+  // Structures
+  const sb=g('tb-ref-s');
+  STRUCTURES.forEach(s=>{
+    const prixStr=s.cout>=200?`${s.cout} L (≈${(s.cout/20).toFixed(0)}r)`:s.cout+' L';
+    const entStr=s.ent>=200?`${s.ent} L/an (≈${(s.ent/20).toFixed(0)}r)`:s.ent?`${s.ent} L/an`:'—';
+    const revStr=s.rev>=200?`${s.rev} L/an (≈${(s.rev/20).toFixed(0)}r)`:s.rev?`${s.rev} L/an`:'—';
+    sb.appendChild(mkRow(`<td><strong>${x(s.nom)}</strong></td><td><span class="tag ${s.tag}">${s.type}</span></td><td class="cn">${prixStr}</td><td>${s.duree} s.</td><td class="cn">${entStr}</td><td style="color:${s.rev>0?'#6abf7b':'#555'}">${revStr}</td><td style="font-size:.75rem;color:#9a7aaa">${s.bonus||'—'}</td>`));
+  });
+  // Fortifications
+  const fb=g('tb-ref-f');
+  FORTIFICATIONS.forEach(f=>{
+    const prixStr=f.cout>=200?`${f.cout} L (= ${(f.cout/20).toFixed(0)}r)`:f.cout+' L';
+    const entStr=f.ent>=200?`${f.ent} L/an (= ${(f.ent/20).toFixed(0)}r/an)`:f.ent?`${f.ent} L/an`:'—';
+    fb.appendChild(mkRow(`<td><strong>${x(f.nom)}</strong></td><td class="cn">${prixStr}</td><td>${f.duree} s.</td><td class="cn">${entStr}</td><td style="font-size:.78rem;color:#888">${f.note}</td>`));
+  });
+  // Agriculture
+  const ab=g('tb-ref-a');
+  AGRICULTURES.forEach(a=>{const b=a.rev-a.ent;ab.appendChild(mkRow(`<td><strong>${x(a.nom)}</strong></td><td class="cn">${a.cout} L</td><td>${a.duree} s.</td><td class="cn">${a.ent} L/an</td><td class="cp">${a.rev} L/an</td><td>${fmtBilan(b)}</td><td style="font-size:.78rem;color:#888">${x(a.note)}</td>`));});
+  // Ressources
+  const rb=g('tb-ref-r');
+  RESSOURCES.forEach(r=>{const b=r.rev-r.ent;rb.appendChild(mkRow(`<td><strong>${x(r.nom)}</strong></td><td class="cn">${r.cout} L</td><td>${r.duree} s.</td><td class="cn">${r.ent} L/an</td><td class="cp">${r.rev} L/an</td><td>${fmtBilan(b)}</td><td style="font-size:.78rem;color:#888">${x(r.note)}</td>`));});
+}
+
+function renderAll(){renderPop();renderStr();renderFort();renderHab();renderAgr();renderRes();}
+function g(id){return document.getElementById(id);}
+function gv(id){const e=g(id);return e?e.value:'';}
+function sv(id,v){const e=g(id);if(e)e.value=v;}
+function x(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  const isLight=document.body.classList.contains('light');
+  g('theme-toggle').textContent=isLight?'🌙 Sombre':'☀️ Clair';
+  localStorage.setItem('rq-theme',isLight?'light':'dark');
+}
+function loadTheme(){
+  const t=localStorage.getItem('rq-theme');
+  if(t==='light'){document.body.classList.add('light');g('theme-toggle').textContent='🌙 Sombre';}
+}
+function toast(msg){const t=g('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+</script>
+</body>
+</html>
