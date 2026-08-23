@@ -1,0 +1,6 @@
+{
+  "name": "RuneQuesting FR - Outils & Créateur RuneQuest Glorantha",
+  "description": "Boîte à outils complète en français pour le jeu de rôle RuneQuest dans Glorantha : création d'aventuriers, feuille de personnage interactive, grimoire des cultes et sorts, gestionnaire de combat Strike Rank et calendrier gloranthien.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
