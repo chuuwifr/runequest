@@ -13,7 +13,9 @@ import {
   Flame, 
   Crown,
   HelpCircle,
-  Palette
+  Palette,
+  FolderArchive,
+  Save
 } from 'lucide-react';
 import { RuneBadge } from './RuneBadge';
 import { useTheme } from '../context/ThemeContext';
@@ -22,12 +24,14 @@ interface NavbarProps {
   currentTab: string;
   onSelectTab: (tab: string) => void;
   onOpenDiceRoller: () => void;
+  onOpenBackupModal?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   onSelectTab,
   onOpenDiceRoller,
+  onOpenBackupModal,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentTheme, setIsThemeModalOpen } = useTheme();
@@ -110,8 +114,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Action Buttons: Quick Dice Roller, Theme Selector & Mobile Menu Button */}
-          <div className="flex items-center gap-2">
+          {/* Action Buttons: Backup & Restore, Theme Selector, Quick Dice Roller & Mobile Menu Button */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Backup & Restore Button */}
+            {onOpenBackupModal && (
+              <button
+                onClick={onOpenBackupModal}
+                className="px-2.5 sm:px-3 py-2 rounded-lg bg-stone-900/90 hover:bg-stone-800 border border-amber-600/40 text-amber-300 font-serif text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition hover:border-amber-400"
+                title="Sauvegardes & Restauration du site (Export/Import JSON, Instantanés)"
+              >
+                <FolderArchive className="h-3.5 w-3.5 text-amber-400" />
+                <span className="hidden sm:inline font-sans text-[11px] font-medium text-amber-200/90">
+                  Sauvegardes
+                </span>
+              </button>
+            )}
+
             {/* Theme Selector Button */}
             <button
               onClick={() => setIsThemeModalOpen(true)}
@@ -149,6 +167,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Dropdown Nav */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-stone-800 bg-stone-950/98 px-4 pt-3 pb-5 space-y-2">
+          {/* Mobile Backup & Restore trigger */}
+          {onOpenBackupModal && (
+            <button
+              onClick={() => {
+                onOpenBackupModal();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-stone-900 border border-amber-600/40 text-amber-300 text-xs font-serif mb-1"
+            >
+              <span className="flex items-center gap-2">
+                <FolderArchive className="h-4 w-4 text-amber-400" />
+                Sauvegardes & Restauration
+              </span>
+              <span className="text-[10px] text-stone-400 font-mono">JSON & Snapshots</span>
+            </button>
+          )}
+
           {/* Mobile Theme quick switch trigger */}
           <button
             onClick={() => {

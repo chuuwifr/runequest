@@ -16,7 +16,10 @@ import {
   Play,
   Layers,
   Palette,
-  Check
+  Check,
+  FolderArchive,
+  Save,
+  RotateCcw
 } from 'lucide-react';
 import { RuneBadge } from './RuneBadge';
 import { PREMADE_ADVENTURERS } from '../data/premadeCharacters';
@@ -29,6 +32,7 @@ interface HomeViewProps {
   onLoadCharacter: (adventurer: Adventurer) => void;
   onOpenDiceRoller: () => void;
   onOpenThemeModal?: () => void;
+  onOpenBackupModal?: () => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
@@ -36,6 +40,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onLoadCharacter,
   onOpenDiceRoller,
   onOpenThemeModal,
+  onOpenBackupModal,
 }) => {
   const { currentThemeId, setTheme, setIsThemeModalOpen } = useTheme();
 
@@ -107,6 +112,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <Palette className="h-5 w-5 text-amber-400" />
               Thèmes Visuels
             </button>
+            {onOpenBackupModal && (
+              <button
+                onClick={onOpenBackupModal}
+                className="px-4 py-3 rounded-xl bg-stone-900/90 hover:bg-stone-800 text-amber-300 border border-amber-600/50 font-serif text-sm flex items-center gap-2 cursor-pointer transition"
+              >
+                <FolderArchive className="h-5 w-5 text-amber-400" />
+                Sauvegardes & Restauration
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -296,6 +310,25 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </p>
             <div className="flex items-center text-xs font-serif font-semibold text-amber-400 pt-2 gap-1 group-hover:translate-x-1 transition">
               Consulter l'éphéméride <ArrowRight className="h-3.5 w-3.5" />
+            </div>
+          </div>
+
+          {/* Card 7: Backup & Restore */}
+          <div 
+            onClick={() => onOpenBackupModal && onOpenBackupModal()}
+            className="group p-6 rounded-xl bg-stone-900/60 border border-stone-800 hover:border-amber-600/60 transition cursor-pointer space-y-3 relative overflow-hidden shadow-lg hover:shadow-amber-950/40"
+          >
+            <div className="w-12 h-12 rounded-lg bg-amber-900/30 border border-amber-600/40 flex items-center justify-center text-amber-400 group-hover:scale-110 transition">
+              <FolderArchive className="h-6 w-6" />
+            </div>
+            <h3 className="font-serif font-bold text-lg text-amber-200 group-hover:text-amber-300">
+              Sauvegardes & Restauration
+            </h3>
+            <p className="text-xs text-stone-400 leading-relaxed">
+              Exportez vos PJ et campagnes au format JSON universel, restaurez vos parties ou créez des points d'instantanés locaux avant vos séances décisives.
+            </p>
+            <div className="flex items-center text-xs font-serif font-semibold text-amber-400 pt-2 gap-1 group-hover:translate-x-1 transition">
+              Gérer les sauvegardes <ArrowRight className="h-3.5 w-3.5" />
             </div>
           </div>
         </div>

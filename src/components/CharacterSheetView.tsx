@@ -43,6 +43,7 @@ import { EditArmorModal } from './modals/EditArmorModal';
 import { EditCurrencyModal } from './modals/EditCurrencyModal';
 import { CategoryModifiersModal } from './modals/CategoryModifiersModal';
 import { CharacteristicTestModal } from './modals/CharacteristicTestModal';
+import { downloadCharacterBackup } from '../utils/backupService';
 
 interface CharacterSheetViewProps {
   adventurer: Adventurer;
@@ -346,19 +347,11 @@ export const CharacterSheetView: React.FC<CharacterSheetViewProps> = ({
             <Sparkles className="h-3.5 w-3.5 text-amber-400" /> Bonus Caractéristiques
           </button>
           <button
-            onClick={() => {
-              const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(adventurer, null, 2));
-              const downloadAnchor = document.createElement('a');
-              downloadAnchor.setAttribute('href', dataStr);
-              downloadAnchor.setAttribute('download', `${adventurer.name.replace(/\s+/g, '_')}_RQG.json`);
-              document.body.appendChild(downloadAnchor);
-              downloadAnchor.click();
-              downloadAnchor.remove();
-            }}
-            className="p-1.5 rounded bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-700 text-xs flex items-center gap-1 cursor-pointer"
-            title="Exporter en JSON"
+            onClick={() => downloadCharacterBackup(adventurer)}
+            className="p-1.5 rounded bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-amber-300 border border-stone-700 text-xs flex items-center gap-1 cursor-pointer transition"
+            title="Exporter cette fiche en fichier JSON"
           >
-            <Download className="h-3.5 w-3.5" /> Exporter
+            <Download className="h-3.5 w-3.5" /> Exporter (.json)
           </button>
         </div>
       </div>

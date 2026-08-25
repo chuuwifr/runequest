@@ -11,17 +11,21 @@ import { NpcGeneratorView } from './components/NpcGeneratorView';
 import { RulesRefView } from './components/RulesRefView';
 import { DiceRollerModal } from './components/DiceRollerModal';
 import { ThemeSelectorModal } from './components/ThemeSelectorModal';
+import { BackupRestoreModal } from './components/BackupRestoreModal';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { PREMADE_ADVENTURERS } from './data/premadeCharacters';
 import { Adventurer, RollResult } from './types/runequest';
-import { Dices, Sparkles, X, Heart, Shield, Zap, Palette } from 'lucide-react';
+import { SiteBackupData } from './types/backup';
+import { ThemeId } from './types/theme';
+import { Dices, Sparkles, X, Heart, Shield, Zap, Palette, FolderArchive } from 'lucide-react';
 
 function AppContent() {
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [isDiceModalOpen, setIsDiceModalOpen] = useState(false);
+  const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
   const [rollHistory, setRollHistory] = useState<RollResult[]>([]);
   const [lastRoll, setLastRoll] = useState<RollResult | null>(null);
-  const { setIsThemeModalOpen, currentTheme } = useTheme();
+  const { setIsThemeModalOpen, currentTheme, setTheme } = useTheme();
 
   // Adventurers State
   const [adventurers, setAdventurers] = useState<Adventurer[]>(() => {
@@ -74,6 +78,63 @@ function AppContent() {
     }
   };
 
+  // Full Restore Handler
+  const handleRestoreAll = (data: SiteBackupData) => {
+    const restoredAdvs = data.payload.adventurers;
+    if (restoredAdvs && restoredAdvs.length > 0) {
+      setAdventurers(restoredAdvs);
+      const targetActive = restoredAdvs.find((a) => a.id === data.payload.activeAdventurerId) || restoredAdvs[0];
+      setActiveAdventurer(targetActive);
+    }
+    if (data.payload.combatState) {
+      localStorage.setItem('rqg_combat_state_v1', JSON.stringify(data.payload.combatState));
+    }
+    if (data.payload.calendarState) {
+      localStorage.setItem('rqg_calendar_state_v1', JSON.stringify(data.payload.calendarState));
+    }
+    if (data.payload.npcsState) {
+      localStorage.setItem('rqg_npcs_state_v1', JSON.stringify(data.payload.npcsState));
+    }
+    if (data.payload.rollHistory) {
+      setRollHistory(data.payload.rollHistory);
+    }
+    if (data.payload.themeId) {
+      setTheme(data.payload.themeId as ThemeId);
+    }
+  };
+
+  // Merge Adventurers Handler
+  const handleMergeAdventurers = (newAdvs: Adventurer[]) => {
+    setAdventurers((prev) => {
+      const existingIds = new Set(prev.map((a) => a.id));
+      const processed: Adventurer[] = newAdvs.map((adv) => {
+        if (existingIds.has(adv.id)) {
+          return {
+            ...adv,
+            id: `adv_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+            name: `${adv.name} (Importé)`,
+          };
+        }
+        return adv;
+      });
+      return [...processed, ...prev];
+    });
+    if (newAdvs[0]) {
+      setActiveAdventurer(newAdvs[0]);
+    }
+  };
+
+  // Reset to Factory Defaults Handler
+  const handleResetToDefaults = () => {
+    setAdventurers(PREMADE_ADVENTURERS);
+    setActiveAdventurer(PREMADE_ADVENTURERS[0]);
+    localStorage.removeItem('rqg_combat_state_v1');
+    localStorage.removeItem('rqg_calendar_state_v1');
+    localStorage.removeItem('rqg_npcs_state_v1');
+    setRollHistory([]);
+    setLastRoll(null);
+  };
+
   return (
     <div className="min-h-screen text-stone-100 flex flex-col font-sans selection:bg-amber-500 selection:text-stone-950 transition-colors duration-300">
       {/* Top Navbar */}
@@ -81,6 +142,7 @@ function AppContent() {
         currentTab={currentTab}
         onSelectTab={(tab) => setCurrentTab(tab)}
         onOpenDiceRoller={() => setIsDiceModalOpen(true)}
+        onOpenBackupModal={() => setIsBackupModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -94,6 +156,7 @@ function AppContent() {
             }}
             onOpenDiceRoller={() => setIsDiceModalOpen(true)}
             onOpenThemeModal={() => setIsThemeModalOpen(true)}
+            onOpenBackupModal={() => setIsBackupModalOpen(true)}
           />
         )}
 
@@ -151,6 +214,18 @@ function AppContent() {
       {/* Theme Selector Modal */}
       <ThemeSelectorModal />
 
+      {/* Backup and Restore Modal */}
+      <BackupRestoreModal
+        isOpen={isBackupModalOpen}
+        onClose={() => setIsBackupModalOpen(false)}
+        adventurers={adventurers}
+        activeAdventurer={activeAdventurer}
+        onRestoreAll={handleRestoreAll}
+        onMergeAdventurers={handleMergeAdventurers}
+        onResetToDefaults={handleResetToDefaults}
+        rollHistory={rollHistory}
+      />
+
       {/* Quick Roll Result Toast Bar */}
       {lastRoll && (
         <div className="fixed bottom-4 right-4 z-40 max-w-sm w-full bg-stone-900/95 border border-amber-600/60 rounded-xl p-3.5 shadow-2xl backdrop-blur-md animate-fade-in flex items-center justify-between text-xs">
@@ -197,7 +272,7 @@ function AppContent() {
       {/* Footer */}
       <footer className="border-t border-amber-950/60 bg-stone-950/80 py-6 text-center text-xs text-stone-500 font-serif mt-auto">
         <div className="max-w-7xl mx-auto px-4 space-y-2">
-          <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
             <span>RUNEQUESTING FR</span>
             <span>•</span>
             <span>RuneQuest: Roleplaying in Glorantha</span>
@@ -210,6 +285,14 @@ function AppContent() {
             >
               <Palette className="w-3 h-3" />
               Thème : {currentTheme.name}
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setIsBackupModalOpen(true)}
+              className="text-amber-400 hover:underline flex items-center gap-1 cursor-pointer font-sans"
+            >
+              <FolderArchive className="w-3 h-3" />
+              Sauvegardes & Restauration
             </button>
           </div>
           <p className="text-[11px] text-stone-600">
