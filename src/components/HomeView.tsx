@@ -19,7 +19,10 @@ import {
   Check,
   FolderArchive,
   Save,
-  RotateCcw
+  RotateCcw,
+  Download,
+  GitBranch,
+  Globe
 } from 'lucide-react';
 import { RuneBadge } from './RuneBadge';
 import { PREMADE_ADVENTURERS } from '../data/premadeCharacters';
@@ -33,6 +36,7 @@ interface HomeViewProps {
   onOpenDiceRoller: () => void;
   onOpenThemeModal?: () => void;
   onOpenBackupModal?: () => void;
+  onOpenGitHubModal?: () => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
@@ -41,6 +45,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onOpenDiceRoller,
   onOpenThemeModal,
   onOpenBackupModal,
+  onOpenGitHubModal,
 }) => {
   const { currentThemeId, setTheme, setIsThemeModalOpen } = useTheme();
 
@@ -119,6 +124,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
               >
                 <FolderArchive className="h-5 w-5 text-amber-400" />
                 Sauvegardes & Restauration
+              </button>
+            )}
+            {onOpenGitHubModal && (
+              <button
+                onClick={onOpenGitHubModal}
+                className="px-4 py-3 rounded-xl bg-gradient-to-r from-stone-900 to-amber-950/60 hover:from-stone-850 hover:to-amber-900/60 text-amber-300 border border-amber-500/50 font-serif text-sm flex items-center gap-2 cursor-pointer transition"
+              >
+                <GitBranch className="h-5 w-5 text-amber-400" />
+                Déploiement GitHub &amp; Pages
               </button>
             )}
           </div>
@@ -329,6 +343,55 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </p>
             <div className="flex items-center text-xs font-serif font-semibold text-amber-400 pt-2 gap-1 group-hover:translate-x-1 transition">
               Gérer les sauvegardes <ArrowRight className="h-3.5 w-3.5" />
+            </div>
+          </div>
+
+          {/* Card 8: Standalone Download Pack (Zero Install) */}
+          <a 
+            href="/runequesting-local-autonome.zip"
+            download="runequesting-local-autonome.zip"
+            className="group p-6 rounded-xl bg-gradient-to-br from-amber-950/40 via-stone-900/80 to-stone-900/90 border border-amber-500/50 hover:border-amber-400 transition cursor-pointer space-y-3 relative overflow-hidden shadow-lg hover:shadow-amber-950/50 no-underline block"
+          >
+            <div className="w-12 h-12 rounded-lg bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 group-hover:scale-110 transition">
+              <Download className="h-6 w-6" />
+            </div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-serif font-bold text-lg text-amber-100 group-hover:text-amber-200">
+                Téléchargement Hors-Ligne
+              </h3>
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/40">
+                Sans Install
+              </span>
+            </div>
+            <p className="text-xs text-stone-300 leading-relaxed">
+              Téléchargez le dossier autonome <code className="text-amber-300">.zip</code> avec serveur inclus et lanceurs prêts à l'emploi pour Windows, Mac et Linux sans rien installer.
+            </p>
+            <div className="flex items-center text-xs font-serif font-bold text-amber-300 pt-2 gap-1 group-hover:translate-x-1 transition">
+              Télécharger le dossier complet (.zip) <ArrowRight className="h-3.5 w-3.5" />
+            </div>
+          </a>
+
+          {/* Card 9: GitHub & Free Online Hosting (GitHub Pages) */}
+          <div 
+            onClick={() => onOpenGitHubModal && onOpenGitHubModal()}
+            className="group p-6 rounded-xl bg-gradient-to-br from-stone-900/90 via-stone-900/80 to-amber-950/30 border border-stone-800 hover:border-amber-500/70 transition cursor-pointer space-y-3 relative overflow-hidden shadow-lg hover:shadow-amber-950/40"
+          >
+            <div className="w-12 h-12 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 group-hover:scale-110 transition">
+              <GitBranch className="h-6 w-6" />
+            </div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-serif font-bold text-lg text-amber-200 group-hover:text-amber-300">
+                GitHub &amp; En Ligne Gratuit
+              </h3>
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/40">
+                Pages Inclus
+              </span>
+            </div>
+            <p className="text-xs text-stone-300 leading-relaxed">
+              Hébergez gratuitement le site sur <code className="text-amber-300">GitHub Pages</code> pour que tous vos joueurs y accèdent via une simple URL, ou clonez et gérez vos versions Git.
+            </p>
+            <div className="flex items-center text-xs font-serif font-semibold text-amber-400 pt-2 gap-1 group-hover:translate-x-1 transition">
+              Voir le guide de déploiement <ArrowRight className="h-3.5 w-3.5" />
             </div>
           </div>
         </div>

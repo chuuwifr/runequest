@@ -437,6 +437,55 @@ export const BackupRestoreModal: React.FC<BackupRestoreModalProps> = ({
                   </button>
                 </div>
               </div>
+
+              {/* Card 3: Standalone Offline Complete App Package (Zero Install) */}
+              <div className="p-5 rounded-xl bg-gradient-to-br from-amber-950/40 via-stone-950 to-stone-950 border-2 border-amber-500/60 space-y-4 shadow-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-800/40 pb-3">
+                  <div>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40 mb-2">
+                      <Sparkles className="h-3 w-3 text-amber-400" /> 100% Autonome & Sans Installation
+                    </span>
+                    <h3 className="font-serif font-bold text-base text-amber-100 flex items-center gap-2">
+                      <FolderArchive className="h-5 w-5 text-amber-400" /> Télécharger Tout le Site Clé en Main (.zip)
+                    </h3>
+                    <p className="text-xs text-stone-300 mt-1">
+                      Téléchargez un dossier ZIP complet contenant <strong>absolument tous les fichiers</strong> (HTML, styles, scripts, lanceurs Windows/Mac/Linux et mini-serveur intégré).
+                    </p>
+                  </div>
+                  <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/40 self-start sm:self-center">
+                    Zéro Dépendance npm
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-stone-300">
+                  <div className="p-3 rounded-lg bg-stone-900/80 border border-stone-800 space-y-1">
+                    <strong className="text-amber-300 block font-serif">⚡ 1. Sous Windows</strong>
+                    <p className="text-[11px] text-stone-400">Dézippez et double-cliquez sur <code className="text-amber-200">LANCER-WINDOWS.bat</code>.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-stone-900/80 border border-stone-800 space-y-1">
+                    <strong className="text-cyan-300 block font-serif">🍎 2. Sous Mac & Linux</strong>
+                    <p className="text-[11px] text-stone-400">Exécutez <code className="text-cyan-200">./LANCER-MAC-LINUX.sh</code> ou ouvrez directement dans le navigateur.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-stone-900/80 border border-stone-800 space-y-1">
+                    <strong className="text-emerald-300 block font-serif">🌐 3. Sans serveur</strong>
+                    <p className="text-[11px] text-stone-400">Double-cliquez simplement sur <code className="text-emerald-200">index.html</code> avec n'importe quel navigateur !</p>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-wrap items-center gap-3">
+                  <a
+                    href="/runequesting-local-autonome.zip"
+                    download="runequesting-local-autonome.zip"
+                    className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-serif font-black text-xs sm:text-sm shadow-xl shadow-amber-900/40 flex items-center gap-2 cursor-pointer transition transform active:scale-95 no-underline"
+                  >
+                    <Download className="h-4 w-4 text-stone-950" />
+                    Télécharger l'Archive Autonome (.zip - Tout Inclus)
+                  </a>
+                  <span className="text-[11px] text-stone-400 italic">
+                    Prêt à l'emploi immédiatement après décompression
+                  </span>
+                </div>
+              </div>
             </div>
           )}
 

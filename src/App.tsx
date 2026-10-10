@@ -12,6 +12,7 @@ import { RulesRefView } from './components/RulesRefView';
 import { DiceRollerModal } from './components/DiceRollerModal';
 import { ThemeSelectorModal } from './components/ThemeSelectorModal';
 import { BackupRestoreModal } from './components/BackupRestoreModal';
+import { GitHubGuideModal } from './components/GitHubGuideModal';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { PREMADE_ADVENTURERS } from './data/premadeCharacters';
 import { Adventurer, RollResult } from './types/runequest';
@@ -23,6 +24,7 @@ function AppContent() {
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [isDiceModalOpen, setIsDiceModalOpen] = useState(false);
   const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
+  const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
   const [rollHistory, setRollHistory] = useState<RollResult[]>([]);
   const [lastRoll, setLastRoll] = useState<RollResult | null>(null);
   const { setIsThemeModalOpen, currentTheme, setTheme } = useTheme();
@@ -143,6 +145,7 @@ function AppContent() {
         onSelectTab={(tab) => setCurrentTab(tab)}
         onOpenDiceRoller={() => setIsDiceModalOpen(true)}
         onOpenBackupModal={() => setIsBackupModalOpen(true)}
+        onOpenGitHubModal={() => setIsGitHubModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -157,6 +160,7 @@ function AppContent() {
             onOpenDiceRoller={() => setIsDiceModalOpen(true)}
             onOpenThemeModal={() => setIsThemeModalOpen(true)}
             onOpenBackupModal={() => setIsBackupModalOpen(true)}
+            onOpenGitHubModal={() => setIsGitHubModalOpen(true)}
           />
         )}
 
@@ -224,6 +228,13 @@ function AppContent() {
         onMergeAdventurers={handleMergeAdventurers}
         onResetToDefaults={handleResetToDefaults}
         rollHistory={rollHistory}
+      />
+
+      {/* GitHub & Online Hosting Guide Modal */}
+      <GitHubGuideModal
+        isOpen={isGitHubModalOpen}
+        onClose={() => setIsGitHubModalOpen(false)}
+        onOpenBackupModal={() => setIsBackupModalOpen(true)}
       />
 
       {/* Quick Roll Result Toast Bar */}
