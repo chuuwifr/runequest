@@ -474,7 +474,7 @@ export const BackupRestoreModal: React.FC<BackupRestoreModalProps> = ({
 
                 <div className="pt-2 flex flex-wrap items-center gap-3">
                   <a
-                    href="/runequesting-local-autonome.zip"
+                    href="./runequesting-local-autonome.zip"
                     download="runequesting-local-autonome.zip"
                     className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-serif font-black text-xs sm:text-sm shadow-xl shadow-amber-900/40 flex items-center gap-2 cursor-pointer transition transform active:scale-95 no-underline"
                   >

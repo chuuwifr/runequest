@@ -348,7 +348,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
           {/* Card 8: Standalone Download Pack (Zero Install) */}
           <a 
-            href="/runequesting-local-autonome.zip"
+            href="./runequesting-local-autonome.zip"
             download="runequesting-local-autonome.zip"
             className="group p-6 rounded-xl bg-gradient-to-br from-amber-950/40 via-stone-900/80 to-stone-900/90 border border-amber-500/50 hover:border-amber-400 transition cursor-pointer space-y-3 relative overflow-hidden shadow-lg hover:shadow-amber-950/50 no-underline block"
           >

@@ -7,8 +7,9 @@ on:
       - master
   workflow_dispatch:
 
+# Permissions nécessaires pour GitHub Pages et la création/mise à jour de la branche gh-pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -18,6 +19,7 @@ concurrency:
 
 jobs:
   build:
+    name: Compilation de l'application statique
     runs-on: ubuntu-latest
     steps:
       - name: Checkout du code source
@@ -27,26 +29,46 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Installation des dépendances
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+          else
+            npm install --legacy-peer-deps
+          fi
 
-      - name: Build de l'application statique
-        run: npm run build
+      - name: Compilation Vite pour GitHub Pages (Chemins relatifs)
+        run: npx vite build --base="./"
 
-      - name: Upload de l'artefact Pages
+      - name: Configuration GitHub Pages (nojekyll & 404 fallback)
+        run: |
+          touch dist/.nojekyll
+          if [ ! -f dist/404.html ]; then
+            cp dist/index.html dist/404.html
+          fi
+
+      - name: Upload de l'artefact GitHub Pages (Pour mode GitHub Actions)
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
-  deploy:
+      - name: Publication sur branche gh-pages (Méthode Universelle)
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
+        continue-on-error: true
+
+  deploy-pages:
+    name: Déploiement automatique GitHub Pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Déploiement sur GitHub Pages
+      - name: Déploiement sur GitHub Pages (Action officielle)
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true

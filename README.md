@@ -41,6 +41,38 @@ Cette application est une suite complète d'aide de jeu pour **RuneQuest: Rolepl
 
 ---
 
+### 🛠️ Dépannage & Erreurs Fréquentes de Déploiement :
+
+Si le déploiement sur GitHub Actions a échoué (croix rouge ❌ dans l'onglet Actions), vérifiez ces 3 réglages essentiels :
+
+#### 1. Erreur « Get Pages site failed with status code 404 »
+- **Cause** : GitHub Pages n'est pas encore activé dans votre dépôt.
+- **Solution** :
+  1. Allez sur votre dépôt GitHub > **Settings** (en haut).
+  2. Cliquez sur **Pages** (dans le menu de gauche).
+  3. Sous **Build and deployment** > **Source**, sélectionnez **GitHub Actions**.
+  *(Alternative : vous pouvez aussi sélectionner **Deploy from a branch** et choisir la branche `gh-pages` qui est générée automatiquement par le workflow !)*
+
+#### 2. Erreur « Resource not accessible by integration » (Erreur 403)
+- **Cause** : Par défaut, certains dépôts ont les permissions GitHub Actions réglées en lecture seule.
+- **Solution** :
+  1. Allez dans **Settings** > **Actions** > **General**.
+  2. Descendez tout en bas jusqu'à la section **Workflow permissions**.
+  3. Cochez **Read and write permissions**.
+  4. Cochez également *Allow GitHub Actions to create and approve pull requests*.
+  5. Cliquez sur **Save**.
+
+#### 3. Dépôt Public vs Privé (Comptes GitHub Gratuits)
+- Sur un compte GitHub standard gratuit, GitHub Pages est réservé aux dépôts **Publics**.
+- Si votre dépôt est en mode *Private*, passez-le en *Public* dans **Settings** > **General** > **Danger Zone** > **Change repository visibility**.
+
+#### 4. Comment relancer le déploiement après correction :
+- Allez dans l'onglet **Actions** de votre dépôt GitHub.
+- Dans la colonne de gauche, cliquez sur **Déploiement GitHub Pages**.
+- Cliquez sur le bouton **Run workflow** (en haut à droite) puis confirmez **Run workflow**. Le déploiement passera au vert ✅ !
+
+---
+
 ## 👥 2. Cloner le Projet depuis GitHub & Jouer en Local
 
 Si vous ou vos joueurs souhaitez récupérer le code depuis GitHub pour jouer hors-ligne ou modifier l'application :

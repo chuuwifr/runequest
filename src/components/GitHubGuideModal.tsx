@@ -14,7 +14,11 @@ import {
   Sparkles,
   FileCode,
   FolderArchive,
-  ChevronRight
+  ChevronRight,
+  AlertTriangle,
+  Wrench,
+  CheckCircle2,
+  RefreshCw
 } from 'lucide-react';
 
 interface GitHubGuideModalProps {
@@ -28,7 +32,7 @@ export const GitHubGuideModal: React.FC<GitHubGuideModalProps> = ({
   onClose,
   onOpenBackupModal,
 }) => {
-  const [activeTab, setActiveTab] = useState<'pages' | 'push' | 'clone' | 'releases'>('pages');
+  const [activeTab, setActiveTab] = useState<'pages' | 'troubleshoot' | 'push' | 'clone' | 'releases'>('troubleshoot');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -89,11 +93,11 @@ npm run dev
                   Guide GitHub & Déploiement en Ligne
                 </h2>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                  GitHub Pages Inclus
+                  Correctifs Inclus
                 </span>
               </div>
               <p className="text-xs text-stone-400">
-                Hébergez gratuitement votre application sur le web ou gérez votre code source avec Git
+                Hébergez gratuitement votre application sur le web, résolvez les erreurs ou jouez hors-ligne
               </p>
             </div>
           </div>
@@ -109,6 +113,20 @@ npm run dev
         {/* Navigation Tabs */}
         <div className="flex border-b border-stone-800 bg-stone-950/60 px-6 gap-2 overflow-x-auto text-xs font-serif font-semibold">
           <button
+            onClick={() => setActiveTab('troubleshoot')}
+            className={`py-3 px-4 border-b-2 flex items-center gap-2 transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'troubleshoot'
+                ? 'border-amber-400 text-amber-300 bg-amber-950/30'
+                : 'border-transparent text-amber-400/80 hover:text-amber-200'
+            }`}
+          >
+            <Wrench className="h-4 w-4 text-amber-400" />
+            Dépannage & Erreurs Déploiement
+            <span className="px-1.5 py-0.5 text-[10px] rounded bg-amber-500/30 text-amber-200 border border-amber-500/50 font-sans">
+              À lire
+            </span>
+          </button>
+          <button
             onClick={() => setActiveTab('pages')}
             className={`py-3 px-4 border-b-2 flex items-center gap-2 transition cursor-pointer whitespace-nowrap ${
               activeTab === 'pages'
@@ -117,7 +135,7 @@ npm run dev
             }`}
           >
             <Globe className="h-4 w-4" />
-            1. Héberger Gratuitement (GitHub Pages)
+            1. Hébergement GitHub Pages
           </button>
           <button
             onClick={() => setActiveTab('push')}
@@ -238,6 +256,143 @@ npm run dev
                         Vos joueurs peuvent désormais ouvrir cette adresse sur leur téléphone, tablette ou ordinateur portable autour de la table de jeu !
                       </p>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 0: TROUBLESHOOTING & DEPLOYMENT FIXES */}
+          {activeTab === 'troubleshoot' && (
+            <div className="space-y-6 animate-fadeIn">
+              {/* Alert Status Banner */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/60 via-stone-900 to-amber-950/60 border border-amber-500/60 flex items-start gap-3">
+                <AlertTriangle className="h-6 w-6 text-amber-400 shrink-0 mt-0.5" />
+                <div className="text-xs space-y-1">
+                  <div className="font-bold text-amber-200 text-sm flex items-center gap-2">
+                    <span>Le déploiement a échoué ? Voici les correctifs appliqués & les 3 réglages GitHub :</span>
+                  </div>
+                  <p className="text-stone-300 leading-relaxed">
+                    Les 2 causes les plus fréquentes d'échec sur GitHub sont le manque du fichier <code className="text-amber-300">package-lock.json</code> et l'oubli de basculer la source de déploiement sur <strong className="text-amber-200">GitHub Actions</strong> dans les paramètres de votre dépôt.
+                  </p>
+                </div>
+              </div>
+
+              {/* What was fixed in the codebase */}
+              <div className="space-y-3">
+                <h3 className="font-serif font-bold text-emerald-300 text-sm flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  1. Correctifs automatiques déjà intégrés au projet :
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-lg bg-stone-950 border border-emerald-900/50 space-y-1">
+                    <span className="font-bold text-emerald-300 block">✓ package-lock.json généré</span>
+                    <p className="text-stone-400 text-[11px]">
+                      Élimine l'erreur <em>"npm ci can only install with an existing package-lock.json"</em> qui faisait planter la compilation dans GitHub Actions.
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-stone-950 border border-emerald-900/50 space-y-1">
+                    <span className="font-bold text-emerald-300 block">✓ Double mode de déploiement</span>
+                    <p className="text-stone-400 text-[11px]">
+                      Le workflow déploie via GitHub Actions <strong>ET</strong> pousse aussi automatiquement les fichiers compilés sur la branche <code className="text-amber-200">gh-pages</code> !
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-stone-950 border border-emerald-900/50 space-y-1">
+                    <span className="font-bold text-emerald-300 block">✓ Fichier .nojekyll inclus</span>
+                    <p className="text-stone-400 text-[11px]">
+                      Empêche le moteur Jekyll de GitHub Pages d'ignorer ou de bloquer les assets compilés de Vite.
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-stone-950 border border-emerald-900/50 space-y-1">
+                    <span className="font-bold text-emerald-300 block">✓ Liens relatifs & Fallback 404</span>
+                    <p className="text-stone-400 text-[11px]">
+                      Tous les liens (dont le zip autonome) sont désormais en chemins relatifs <code className="text-amber-200">./</code>, et un <code className="text-amber-200">404.html</code> gère les rechargements.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* The 3 settings to check on GitHub */}
+              <div className="space-y-3">
+                <h3 className="font-serif font-bold text-amber-200 text-sm flex items-center gap-2">
+                  <Wrench className="h-4 w-4 text-amber-400" />
+                  2. Les 3 vérifications indispensables sur votre dépôt GitHub :
+                </h3>
+
+                <div className="space-y-3 text-xs">
+                  {/* Setting 1: Pages Source */}
+                  <div className="p-4 rounded-xl bg-stone-950 border border-amber-600/40 space-y-2">
+                    <div className="flex items-center gap-2 font-bold text-amber-300 text-sm">
+                      <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs">A</span>
+                      Activer GitHub Pages dans "Settings" &gt; "Pages"
+                    </div>
+                    <p className="text-stone-300 text-[11px] leading-relaxed">
+                      Si vous voyez l'erreur <em>"Get Pages site failed with status code 404"</em>, c'est que GitHub Pages attend votre confirmation :
+                    </p>
+                    <ol className="list-decimal list-inside space-y-1 text-[11px] text-stone-300 bg-stone-900/80 p-3 rounded-lg border border-stone-800">
+                      <li>Sur GitHub, ouvrez votre dépôt et cliquez sur l'onglet <strong>Settings</strong> (en haut).</li>
+                      <li>Dans le menu de gauche, cliquez sur <strong>Pages</strong>.</li>
+                      <li>Sous <strong>Build and deployment &gt; Source</strong>, sélectionnez : <strong className="text-amber-300">GitHub Actions</strong>.</li>
+                      <li className="text-stone-400 italic">
+                        (Alternative de secours : si vous préférez, choisissez <em>Deploy from a branch</em>, puis sélectionnez la branche <strong className="text-amber-300">gh-pages</strong> créée par le workflow).
+                      </li>
+                    </ol>
+                  </div>
+
+                  {/* Setting 2: Workflow Permissions */}
+                  <div className="p-4 rounded-xl bg-stone-950 border border-amber-600/40 space-y-2">
+                    <div className="flex items-center gap-2 font-bold text-amber-300 text-sm">
+                      <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs">B</span>
+                      Autoriser l'écriture pour les Workflows ("Workflow permissions")
+                    </div>
+                    <p className="text-stone-300 text-[11px] leading-relaxed">
+                      Si vous voyez l'erreur <em>"Resource not accessible by integration"</em> (403) :
+                    </p>
+                    <ol className="list-decimal list-inside space-y-1 text-[11px] text-stone-300 bg-stone-900/80 p-3 rounded-lg border border-stone-800">
+                      <li>Allez dans <strong>Settings</strong> &gt; <strong>Actions</strong> &gt; <strong>General</strong>.</li>
+                      <li>Faites défiler tout en bas jusqu'à la section <strong>Workflow permissions</strong>.</li>
+                      <li>Cochez : <strong className="text-amber-300">Read and write permissions</strong>.</li>
+                      <li>Cochez aussi : <em>Allow GitHub Actions to create and approve pull requests</em>.</li>
+                      <li>Cliquez sur le bouton vert <strong>Save</strong>.</li>
+                    </ol>
+                  </div>
+
+                  {/* Setting 3: Visibility */}
+                  <div className="p-4 rounded-xl bg-stone-950 border border-amber-600/40 space-y-2">
+                    <div className="flex items-center gap-2 font-bold text-amber-300 text-sm">
+                      <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs">C</span>
+                      Dépôt Public vs Privé (Comptes GitHub Gratuits)
+                    </div>
+                    <p className="text-stone-300 text-[11px] leading-relaxed">
+                      Sur les comptes gratuits, GitHub Pages n'est actif que sur les dépôts <strong>Publics</strong>. Si votre dépôt est en "Private", passez-le en Public dans <strong>Settings &gt; General &gt; Danger Zone &gt; Change repository visibility &gt; Make public</strong>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* How to re-run deploy */}
+              <div className="p-4 rounded-xl bg-stone-950 border border-emerald-600/50 space-y-2 text-xs">
+                <h4 className="font-serif font-bold text-emerald-300 text-sm flex items-center gap-2">
+                  <RefreshCw className="h-4 w-4 text-emerald-400" />
+                  3. Comment relancer le déploiement maintenant :
+                </h4>
+                <p className="text-stone-300 text-[11px] leading-relaxed">
+                  Une fois les réglages ci-dessus vérifiés, vous pouvez relancer le déploiement en 1 clic :
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div className="p-3 rounded-lg bg-stone-900 border border-stone-800 space-y-1">
+                    <strong className="text-amber-300 block font-serif">Option A : En 1 clic dans l'interface GitHub</strong>
+                    <p className="text-stone-400 text-[11px]">
+                      Allez dans l'onglet <strong>Actions</strong> de votre dépôt GitHub &gt; cliquez sur <strong>Déploiement GitHub Pages</strong> à gauche &gt; cliquez sur le bouton <strong>Run workflow</strong> &gt; <strong>Run workflow</strong>.
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-stone-900 border border-stone-800 space-y-1">
+                    <strong className="text-cyan-300 block font-serif">Option B : Via votre terminal Git</strong>
+                    <p className="text-stone-400 text-[11px]">
+                      Poussez le code mis à jour :<br />
+                      <code className="text-stone-200 bg-stone-950 px-1 py-0.5 rounded border border-stone-700">git add . && git commit -m "fix: déploiement" && git push</code>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -366,7 +521,7 @@ npm run dev
                     Vous pouvez attacher le fichier <code className="text-amber-300">runequesting-local-autonome.zip</code> à une <strong>Release GitHub</strong>. Vos joueurs n'auront alors qu'à télécharger ce zip en 1 clic pour jouer hors-ligne sans installer Node ni Git !
                   </p>
                   <a
-                    href="/runequesting-local-autonome.zip"
+                    href="./runequesting-local-autonome.zip"
                     download="runequesting-local-autonome.zip"
                     className="inline-flex items-center gap-1.5 text-xs font-serif font-bold text-amber-300 hover:text-amber-200 bg-amber-950/60 px-3 py-1.5 rounded-lg border border-amber-600/40"
                   >

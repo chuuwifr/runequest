@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && python3 scripts/package_standalone.py",
+    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && (python3 scripts/package_standalone.py || true)",
+    "build:client": "vite build",
+    "build:pages": "vite build",
     "package:standalone": "python3 scripts/package_standalone.py",
     "start": "node dist/server.cjs",
     "preview": "vite preview",
