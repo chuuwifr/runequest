@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>RuneQuesting FR - Redirection</title>
+    <script>
+      // Redirection automatique vers l'application principale pour GitHub Pages SPA
+      var pathSegmentsToKeep = 1;
+      var l = window.location;
+      var target = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/';
+      window.location.replace(target);
+    </script>
+  </head>
+  <body style="background: #0d0d11; color: #f5f5f4; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <p>Chargement de RuneQuesting...</p>
+  </body>
+</html>
