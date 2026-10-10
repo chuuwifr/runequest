@@ -58,72 +58,65 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-amber-800/40 bg-stone-950/95 backdrop-blur-md text-stone-100 shadow-xl shadow-black/60">
-      {/* Top Banner Ribbon */}
-      <div className="bg-gradient-to-r from-amber-950 via-stone-900 to-amber-950 px-4 py-1 text-center text-xs font-serif text-amber-300/80 border-b border-amber-900/30 flex items-center justify-center gap-3">
-        <span className="hidden sm:inline">⚡ RUNEQUEST : AVENTURES DANS GLORANTHA ⚡</span>
-        <span className="inline-flex items-center gap-1.5 font-sans font-medium text-amber-200">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          Version Française Intégrale
-        </span>
+      {/* Top Banner Ribbon - 2 lignes d'informations sur toute la largeur de la page */}
+      <div className="w-full bg-gradient-to-r from-amber-950 via-stone-950 to-amber-950 border-b border-amber-900/30 px-4 py-1.5 text-center text-xs font-serif text-amber-300/80">
+        <div className="w-full max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-1 px-2 sm:px-4">
+          {/* Ligne / Segment 1 : Titre et univers */}
+          <div className="flex items-center gap-2">
+            <span className="text-amber-400">⚡</span>
+            <span className="font-bold tracking-wider text-amber-200">RUNEQUEST : AVENTURES DANS GLORANTHA</span>
+            <span className="hidden sm:inline text-amber-400/60 font-sans text-[11px]">— L'Âge du Bronze Mythique</span>
+          </div>
+          {/* Ligne / Segment 2 : Statut de traduction et modules */}
+          <div className="flex items-center gap-2.5 text-[11px] font-sans">
+            <span className="inline-flex items-center gap-1.5 font-medium text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Version Française Intégrale
+            </span>
+            <span className="text-stone-600 hidden sm:inline">•</span>
+            <span className="text-stone-300 hidden sm:inline">Création de PJ • Combat SR • Grimoire &amp; Sorts • Panthéon • PNJ &amp; Règles</span>
+          </div>
+        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand Logo */}
+      {/* LIGNE 1 : Logo & Outils d'action (Plein format sur toute la largeur de la page) */}
+      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+        <div className="flex items-center justify-between gap-4">
+          {/* Brand Logo & Description */}
           <div 
             onClick={() => handleTabClick('home')}
-            className="flex items-center gap-3 cursor-pointer group select-none"
+            className="flex items-center gap-3 cursor-pointer group select-none flex-shrink-0"
           >
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-amber-700 to-amber-950 border border-amber-500/60 shadow-lg shadow-amber-900/30 group-hover:scale-105 transition">
-              <span className="text-xl">🌪️</span>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] text-stone-950 font-black">
+            <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-amber-700 to-amber-950 border border-amber-500/60 shadow-lg shadow-amber-900/40 group-hover:scale-105 transition">
+              <span className="text-2xl">🌪️</span>
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] text-stone-950 font-black shadow">
                 RQ
               </div>
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-serif text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100 drop-shadow">
+              <div className="flex items-center gap-2">
+                <span className="font-serif text-xl sm:text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100 drop-shadow">
                   RUNEQUESTING
                 </span>
-                <span className="text-xs px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/40">
+                <span className="text-xs px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/40">
                   FR
                 </span>
               </div>
-              <p className="text-[10px] font-sans text-stone-400 tracking-tight">
-                Boîte à Outils Gloranthienne
+              <p className="text-[11px] font-sans text-stone-400 tracking-tight flex items-center gap-2">
+                <span>Boîte à Outils Gloranthienne</span>
+                <span className="hidden sm:inline text-stone-600">•</span>
+                <span className="hidden sm:inline text-amber-400/80 font-serif">Aventures dans Glorantha</span>
               </p>
             </div>
           </div>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden lg:flex items-center space-x-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = currentTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleTabClick(item.id)}
-                  className={`px-3 py-2 rounded-lg text-xs font-serif font-semibold tracking-wide transition flex items-center gap-1.5 cursor-pointer ${
-                    isActive
-                      ? 'bg-amber-600/25 text-amber-300 border border-amber-500/50 shadow-inner'
-                      : 'text-stone-300 hover:text-amber-200 hover:bg-stone-800/60'
-                  }`}
-                >
-                  <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-amber-400' : 'text-stone-400'}`} />
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Action Buttons: Backup & Restore, Theme Selector, Quick Dice Roller & Mobile Menu Button */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Action Buttons: Backup & Restore, GitHub Guide, Theme Selector & Quick Dice Roller */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
             {/* Backup & Restore Button */}
             {onOpenBackupModal && (
               <button
                 onClick={onOpenBackupModal}
-                className="px-2.5 sm:px-3 py-2 rounded-lg bg-stone-900/90 hover:bg-stone-800 border border-amber-600/40 text-amber-300 font-serif text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition hover:border-amber-400"
+                className="px-2.5 sm:px-3 py-2 rounded-lg bg-stone-900/90 hover:bg-stone-800 border border-amber-600/40 hover:border-amber-400 text-amber-300 font-serif text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition active:scale-95"
                 title="Sauvegardes & Restauration du site (Export/Import JSON, Instantanés)"
               >
                 <FolderArchive className="h-3.5 w-3.5 text-amber-400" />
@@ -137,11 +130,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             {onOpenGitHubModal && (
               <button
                 onClick={onOpenGitHubModal}
-                className="px-2.5 sm:px-3 py-2 rounded-lg bg-stone-900/90 hover:bg-stone-800 border border-amber-600/40 text-amber-300 font-serif text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition hover:border-amber-400"
+                className="px-2.5 sm:px-3 py-2 rounded-lg bg-stone-900/90 hover:bg-stone-800 border border-amber-600/40 hover:border-amber-400 text-amber-300 font-serif text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition active:scale-95"
                 title="Guide GitHub, Déploiement GitHub Pages & Code Source"
               >
                 <GitBranch className="h-3.5 w-3.5 text-amber-400" />
-                <span className="hidden xl:inline font-sans text-[11px] font-medium text-amber-200/90">
+                <span className="hidden md:inline font-sans text-[11px] font-medium text-amber-200/90">
                   GitHub &amp; En Ligne
                 </span>
               </button>
@@ -150,12 +143,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Theme Selector Button */}
             <button
               onClick={() => setIsThemeModalOpen(true)}
-              className="px-2.5 sm:px-3 py-2 rounded-lg bg-stone-900/90 hover:bg-stone-800 border border-amber-500/40 text-stone-200 font-serif text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition hover:border-amber-400"
+              className="px-2.5 sm:px-3 py-2 rounded-lg bg-stone-900/90 hover:bg-stone-800 border border-amber-500/40 hover:border-amber-400 text-stone-200 font-serif text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition active:scale-95"
               title="Changer le style visuel et le thème (Parchemin, Sombre, etc.)"
             >
               <Palette className="h-3.5 w-3.5 text-amber-400" />
               <span className="text-sm">{currentTheme.runeSymbol}</span>
-              <span className="hidden md:inline font-sans text-[11px] text-amber-200/90">
+              <span className="hidden sm:inline font-sans text-[11px] text-amber-200/90">
                 {currentTheme.name}
               </span>
             </button>
@@ -163,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Quick Dice Roller Button */}
             <button
               onClick={onOpenDiceRoller}
-              className="px-3 py-2 rounded-lg bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 text-stone-950 font-bold font-serif text-xs shadow-md shadow-amber-950/40 border border-amber-400/50 flex items-center gap-2 cursor-pointer transition transform active:scale-95"
+              className="px-3 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-stone-950 font-bold font-serif text-xs shadow-md shadow-amber-950/50 border border-amber-300/60 flex items-center gap-2 cursor-pointer transition transform active:scale-95"
               title="Ouvrir le lanceur de dés rapide"
             >
               <Dices className="h-4 w-4 text-stone-950" />
@@ -173,17 +166,44 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile menu toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-300 hover:text-white"
+              className="md:hidden p-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-300 hover:text-white"
+              aria-label="Menu"
             >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
       </div>
 
+      {/* LIGNE 2 : Barre de Navigation Dédiée (Occupant toute la largeur de la page avec tous les 9 modules) */}
+      <div className="w-full border-t border-amber-900/30 bg-stone-950/80 backdrop-blur-md">
+        <div className="w-full max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-8">
+          <nav className="flex items-center justify-start lg:justify-center overflow-x-auto no-scrollbar py-1.5 gap-1 sm:gap-1.5">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleTabClick(item.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-serif font-medium tracking-wide transition flex items-center gap-1.5 flex-shrink-0 cursor-pointer ${
+                    isActive
+                      ? 'bg-amber-600/30 text-amber-200 border border-amber-500/60 shadow-sm shadow-amber-950/50 font-bold'
+                      : 'text-stone-300 hover:text-amber-200 hover:bg-stone-800/60 border border-transparent'
+                  }`}
+                >
+                  <Icon className={`h-3.5 w-3.5 flex-shrink-0 ${isActive ? 'text-amber-400' : 'text-stone-400'}`} />
+                  <span className="whitespace-nowrap">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
       {/* Mobile Dropdown Nav */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-stone-800 bg-stone-950/98 px-4 pt-3 pb-5 space-y-2">
+        <div className="md:hidden border-t border-stone-800 bg-stone-950/98 px-4 pt-3 pb-5 space-y-2">
           {/* Mobile Backup & Restore trigger */}
           {onOpenBackupModal && (
             <button

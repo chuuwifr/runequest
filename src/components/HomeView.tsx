@@ -63,7 +63,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6">
           {/* Animated Rune Ribbon */}
           <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-2">
             {allRunes.map((rune) => (
